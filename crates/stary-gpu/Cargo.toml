@@ -1,0 +1,18 @@
+[package]
+name = "stary-gpu"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+bytemuck = { version = "1", features = ["derive"] }
+pollster = "0.4"
+rayon = "1.12.0"
+stary-register = { version = "0.1.0", path = "../stary-register" }
+stary-stack = { version = "0.1.0", path = "../stary-stack" }
+thiserror = "2.0.21"
+wgpu = "30"
+
+[lints]
+workspace = true

@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'STARY Font';
+  src: url('../../../font/font.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@theme {
+  --color-midnight: #0b111b;
+  --color-twilight: #2b384b;
+  --color-mist: #9aa5b4;
+  --color-moon: #e0e4e9;
+  --color-ember: #d8a48f;
+  --color-danger: #d2979c;
+  --color-caution: #c4b684;
+  --font-sans: 'STARY Font', system-ui, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-midnight);
+    color: var(--color-moon);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--color-mist) 35%, transparent);
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: -2px;
+  }
+}

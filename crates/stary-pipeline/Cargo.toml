@@ -1,0 +1,26 @@
+[package]
+name = "stary-pipeline"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+rayon = "1.12.0"
+stary-calib = { version = "0.1.0", path = "../stary-calib" }
+stary-core = { version = "0.1.0", path = "../stary-core" }
+stary-demosaic = { version = "0.1.0", path = "../stary-demosaic" }
+stary-gpu = { version = "0.1.0", path = "../stary-gpu" }
+stary-io = { version = "0.1.0", path = "../stary-io" }
+stary-mask = { version = "0.1.0", path = "../stary-mask" }
+stary-raw = { version = "0.1.0", path = "../stary-raw" }
+stary-register = { version = "0.1.0", path = "../stary-register" }
+stary-stack = { version = "0.1.0", path = "../stary-stack" }
+sysinfo = "0.39.6"
+thiserror = "2.0.21"
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+tempfile = "3.27.0"

@@ -1,0 +1,338 @@
+{
+  "meta": {
+    "name": "English"
+  },
+  "app": {
+    "name": "STARY"
+  },
+  "topBar": {
+    "settings": "Settings"
+  },
+  "fileList": {
+    "title": "Files",
+    "addSession": "Add session",
+    "session": "Session {{n}}",
+    "removeSession": "Remove session",
+    "removeItem": "Remove",
+    "addToRole": "Add files to {{role}}",
+    "empty": "Add a session first.",
+    "result": "Result",
+    "resultEmpty": "Stacked results will appear here.",
+    "master": "MASTER",
+    "leftOut": "Left out",
+    "leftOutReason": {
+      "too_few_stars_to_align": "Not enough stars to align.",
+      "no_match": "Its stars did not match the reference frame.",
+      "bright_sky": "The sky is much brighter than in the other frames.",
+      "noisy": "Much noisier than the other frames.",
+      "few_stars": "Far fewer stars than in the other frames.",
+      "blurry": "Blurrier than the other frames.",
+      "trailed": "The stars are trailed."
+    },
+    "calibrated": "Calibrated",
+    "dismiss": "Dismiss",
+    "contextMenu": {
+      "setMaster": "Set as master",
+      "clearMaster": "Clear master",
+      "masterNeedsAlone": "Remove the other files in this role first",
+      "remove": "Remove {{count}} file(s) from list",
+      "setRepresentative": "Set as representative image",
+      "alreadyRepresentative": "This is already the representative image"
+    },
+    "renameHint": "Double-click to rename",
+    "representative": "Representative image"
+  },
+  "roles": {
+    "light": "Light",
+    "dark": "Dark",
+    "flat": "Flat",
+    "dark_flat": "Dark Flat",
+    "bias": "Bias"
+  },
+  "formats": {
+    "raw": "RAW",
+    "fits": "FITS",
+    "jpeg": "JPEG",
+    "png": "PNG",
+    "tiff": "TIFF"
+  },
+  "kinds": {
+    "master_bias": "Master Bias",
+    "master_dark": "Master Dark",
+    "master_flat": "Master Flat",
+    "master_dark_flat": "Master Dark Flat",
+    "stack_result": "Stack result"
+  },
+  "layouts": {
+    "mono": "Monochrome",
+    "rgb": "RGB",
+    "bayer": "Bayer {{pattern}}",
+    "x_trans": "X-Trans"
+  },
+  "properties": {
+    "title": "Properties",
+    "file": "File",
+    "path": "Path",
+    "format": "Format",
+    "size": "File size",
+    "dimensions": "Dimensions",
+    "layout": "Pixel layout",
+    "bitDepth": "Bit depth",
+    "camera": "Camera",
+    "exposure": "Exposure",
+    "iso": "ISO / Gain",
+    "capturedAt": "Captured",
+    "kind": "Type",
+    "stackCount": "Stacked frames",
+    "calibrated": "Calibrated",
+    "yes": "Yes",
+    "none": "—",
+    "bits": "{{count}}-bit"
+  },
+  "viewer": {
+    "loading": "Loading…",
+    "error": "Could not show this image.",
+    "fit": "Fit",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "previewOf": "Preview of {{width}} × {{height}}"
+  },
+  "operation": {
+    "title": "Operation",
+    "pickFolder": "Choose a folder",
+    "changeFolder": "Change…",
+    "defaultFolder": "default",
+      "general": {
+        "title": "General",
+        "device": {
+          "title": "Compute device",
+          "cpu": "CPU",
+          "gpu": "GPU",
+          "cpuInfo": "CPU: {{count}} threads",
+          "gpuInfo": "GPU: {{name}} ({{backend}})",
+          "gpuChecking": "GPU: looking…",
+          "gpuUnavailable": "GPU: none was found"
+        },
+        "memory": "Memory budget"
+      },
+    "calibration": {
+      "read": {
+        "title": "File reading",
+        "exact": "Exact",
+        "fast": "Fast"
+      },
+      "title": "Calibration",
+      "none": "None",
+      "master": "Master",
+      "frames": "{{count}} frames",
+      "apply": "Apply calibration",
+      "masterFolder": "Masters are saved to",
+      "calibratedFolder": "Calibrated lights are saved to",
+      "saveMasters": "Save masters",
+      "saveCalibrated": "Save calibrated lights",
+      "sizeEstimate": "About {{size}} will be written (16-bit).",
+      "runCalibration": "Run calibration only",
+      "runHint": "Turn on a save option that has something to save first."
+    },
+    "mode": {
+      "title": "Mode",
+      "trails": "Trails",
+      "stacking": "Stacking",
+      "combine": "Combine method",
+      "alignModel": "Alignment model",
+      "average": "Average",
+      "sigma": "Sigma clip",
+      "groundMasking": "Ground masking",
+      "groundStack": "Stack ground separately",
+      "resultFolder": "Result is saved to",
+      "run": "Run",
+      "quality": "Demosaic quality",
+      "qualities": {
+        "fast": "Fast",
+        "high": "High"
+      },
+      "alignModels": {
+        "similarity": "Similarity (shift, rotation)",
+        "affine": "Affine",
+        "homography": "Homography"
+      },
+      "resampler": "Resampling",
+      "resamplers": {
+        "bilinear": "Bilinear",
+        "bicubic": "Bicubic",
+        "lanczos3": "Lanczos-3"
+      },
+      "rejectLow": "Reject low (σ)",
+      "rejectHigh": "Reject high (σ)",
+      "trailsMethods": {
+        "lighten": "Lighten",
+        "comet": "Comet",
+        "gap_filling": "Gap Filling"
+      },
+      "tailFrames": "Tail length (frames)",
+      "reverseOrder": "Reverse order",
+      "gapFillingNote": "Fills the gaps between the trails of consecutive frames. Things fixed to the ground are smeared too.",
+      "skipPoorFrames": "Skip poor frames"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "systemDefault": "System default",
+    "close": "Close"
+  },
+  "status": {
+    "scanning": "Looking for files…",
+    "importing": "Adding files…",
+    "ready": "Ready",
+    "added": "Added {{count}} file(s)",
+    "rejected": "{{count}} file(s) could not be added",
+    "items": "{{count}} file(s)",
+    "device": "Device: {{device}}"
+  },
+  "rejections": {
+    "duplicate": "{{name}}: already added.",
+    "wrong_role": "{{name}}: this is a {{expected}} master and cannot go here.",
+    "slot_holds_master": "{{name}}: {{role}} already has a master. Remove it first.",
+    "slot_holds_frames": "{{name}}: {{role}} already has frames. Remove them first.",
+    "incompatible_size": "{{name}}: image size differs from the other files in this session.",
+    "incompatible_layout": "{{name}}: pixel layout differs from the other files in this session.",
+    "read_failed": "{{name}}: could not be read.",
+    "unsupported_file": "{{name}}: unsupported file.",
+    "decode_failed": "{{name}}: could not be decoded.",
+    "internal": "{{name}}: unexpected error."
+  },
+  "warnings": {
+    "exposure_differs": "Exposure {{actual}} differs from {{expected}}",
+    "iso_differs": "ISO/Gain {{actual}} differs from {{expected}}",
+    "format_mixed": "File format differs from the rest of the session",
+    "low_accuracy": "Calibration with JPEG/PNG is less accurate"
+  },
+  "confirm": {
+    "sessionTitle": "Delete {{name}}?",
+    "sessionMessage": "{{count}} file(s) in this session will be removed. This cannot be undone.",
+    "filesTitle": "Delete {{count}} selected file(s)?",
+    "filesMessage": "Are you sure? This cannot be undone.",
+    "note": "Your original files on disk are not deleted; they are only removed from the list.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "dropConfirm": {
+    "title": "Add {{count}} file(s)?",
+    "message": "{{count}} file(s) will be added to {{role}} in {{session}}. Continue?",
+    "confirm": "Add",
+    "cancel": "Cancel"
+  },
+  "inspector": {
+    "histogram": "Histogram",
+    "logScale": "Log",
+    "clippedLow": "Black clipped",
+    "clippedHigh": "White clipped"
+  },
+  "job": {
+    "starting": "Starting…",
+    "cancel": "Cancel",
+    "done": "Done in {{seconds}} s",
+    "doneResult": "Done in {{seconds}} s. The result was added to Result.",
+    "cancelled": "Cancelled",
+    "deviceCpu": "CPU",
+    "deviceGpu": "GPU: {{name}}",
+    "stage": {
+      "bias": "Bias",
+      "dark_flat": "Dark Flat",
+      "dark": "Dark",
+      "flat": "Flat",
+      "lights": "Lights",
+      "demosaic": "Demosaicing",
+      "saving": "Saving",
+      "align": "Aligning",
+      "stack": "Stacking"
+    },
+    "errors": {
+      "busy": "Another job is already running.",
+      "no_input": "There are no light frames to process.",
+      "geometry": "Frames do not match in size or sensor layout. {{message}}",
+      "raw": "A RAW file could not be read. {{message}}",
+      "file": "A file could not be read or written. {{message}}",
+      "other": "The job failed. {{message}}",
+      "io": "A file could not be read or is not a supported format. {{message}}",
+      "gpu": "The GPU could not do the work. Choose the CPU as the device in the settings and run again. {{message}}",
+      "demosaic": "The color image could not be made. {{message}}",
+      "not_enough_frames": "Fewer than two frames could be aligned. Check that the frames show the same part of the sky.",
+      "not_enough_sky_stars": "The sky of the mask has too few stars to align on. Check the mask."
+    },
+    "doneSkipped": "Done in {{seconds}} s. {{used}} of {{total}} frames were stacked ({{misaligned}} could not be aligned, {{poor}} left out for poor quality). The result was added to Result.",
+    "oneReadWarning": "Some masters were made by reading once and may still hold spoiled values. Use exact reading for a better result."
+  },
+  "mask": {
+    "detect": "Find sky",
+    "tools": {
+      "title": "Tool",
+      "hand": "Move",
+      "sky": "Sky",
+      "ground": "Ground",
+      "refine": "Refine"
+    },
+    "size": "Size",
+    "hardness": "Hardness",
+    "offset": "Offset",
+    "feather": "Feather",
+    "apply": "Apply",
+    "undo": "Undo",
+    "redo": "Redo",
+    "clear": "Clear",
+    "working": "Working…",
+    "skyShare": "Sky {{percent}}%",
+    "confirmTitle": "Find the sky again?",
+    "confirmMessage": "The mask made so far will be erased. Is that all right?",
+    "cancel": "Cancel",
+    "fewStarsTitle": "Few stars in the sky",
+    "fewStarsMessage": "Only {{count}} stars were found in the sky of the mask, so the frames may not be aligned. Run anyway?",
+    "runAnyway": "Run",
+    "failed": "Could not find the sky."
+  },
+  "export": {
+    "menu": "Save as…",
+    "title": "Save as",
+    "format": "Format",
+    "depth": "Bits",
+    "space": "Color space",
+    "tone": "Brightness",
+    "quality": "Quality",
+    "containers": {
+      "tiff": "TIFF",
+      "png": "PNG",
+      "jpeg": "JPEG",
+      "fits": "FITS"
+    },
+    "depths": {
+      "eight": "8-bit",
+      "sixteen": "16-bit",
+      "float": "32-bit float"
+    },
+    "spaces": {
+      "keep": "As the result",
+      "srgb": "sRGB",
+      "display_p3": "Display P3",
+      "adobe_rgb": "Adobe RGB"
+    },
+    "tones": {
+      "linear": "Linear",
+      "display": "Gamma",
+      "stretch": "Auto stretch"
+    },
+    "loses": "The file holds less than the result. The result itself stays as it is.",
+    "save": "Save…",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "saved": "Saved {{name}}",
+    "failed": "Could not save. {{message}}",
+    "sameFile": "Choose a file other than the result itself."
+  },
+  "closeGuard": {
+    "title": "A job is running",
+    "message": "Closing now stops it and its result is lost. Close anyway?",
+    "quit": "Close",
+    "stay": "Keep running"
+  }
+}

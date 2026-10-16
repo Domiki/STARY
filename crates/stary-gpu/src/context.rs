@@ -36,6 +36,8 @@ pub struct GpuContext {
     pub(crate) device: wgpu::Device,
     pub(crate) queue: wgpu::Queue,
     pub(crate) limits: wgpu::Limits,
+    /// PCI vendor and device ids, to find the same GPU through the operating system.
+    pub(crate) pci_ids: (u32, u32),
     info: GpuInfo,
     failure: Arc<Mutex<Option<String>>>,
 }
@@ -50,7 +52,8 @@ fn kind_of(device_type: wgpu::DeviceType) -> GpuKind {
 }
 
 fn most_powerful_adapter() -> Result<wgpu::Adapter, GpuError> {
-    let instance = wgpu::Instance::default();
+    let instance =
+        wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle_from_env());
     let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
         power_preference: wgpu::PowerPreference::HighPerformance,
         ..Default::default()
@@ -84,6 +87,8 @@ impl GpuContext {
     pub fn new() -> Result<Self, GpuError> {
         let adapter = most_powerful_adapter()?;
         let info = info_of(&adapter);
+        let details = adapter.get_info();
+        let pci_ids = (details.vendor, details.device);
         let limits = adapter.limits();
         let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
             label: Some("stary"),
@@ -103,6 +108,7 @@ impl GpuContext {
             device,
             queue,
             limits,
+            pci_ids,
             info,
             failure,
         })

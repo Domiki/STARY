@@ -3706,6 +3706,7 @@ dependencies = [
  "stary-stack",
  "thiserror 2.0.21",
  "wgpu",
+ "windows",
 ]
 
 [[package]]

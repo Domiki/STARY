@@ -14,12 +14,22 @@ pub struct GpuMemory {
     pub shared: bool,
 }
 
-/// The size of the video memory of the primary GPU, from the operating system, when it can be told.
+/// How much video memory of the opened GPU the operating system lets this program use, when it
+/// can be told.
 ///
-/// Not done yet on Windows (DXGI `QueryVideoMemoryInfo`) and Linux (Vulkan `VK_EXT_memory_budget`,
-/// or `mem_info_vram_total` in sysfs for AMD); the guide for those systems says how.
-pub fn platform_vram_bytes() -> Option<u64> {
-    None
+/// Not done yet on Linux (Vulkan `VK_EXT_memory_budget`, or `mem_info_vram_total` in sysfs for
+/// AMD).
+pub fn platform_vram_bytes(context: &GpuContext) -> Option<u64> {
+    #[cfg(windows)]
+    {
+        let (vendor, device) = context.pci_ids;
+        crate::vram_windows::local_budget_bytes(vendor, device)
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = context;
+        None
+    }
 }
 
 impl GpuMemory {
@@ -32,9 +42,9 @@ impl GpuMemory {
                 shared: true,
             };
         }
-        if let Some(total) = platform_vram_bytes() {
+        if let Some(available) = platform_vram_bytes(context) {
             return Self {
-                budget_bytes: total * USABLE_SHARE_PERCENT / 100,
+                budget_bytes: available * USABLE_SHARE_PERCENT / 100,
                 guessed: false,
                 shared: false,
             };
@@ -48,5 +58,24 @@ impl GpuMemory {
 
     pub const fn fits(&self, bytes: u64) -> bool {
         bytes <= self.budget_bytes
+    }
+}
+
+#[cfg(all(test, windows))]
+mod tests {
+    use super::*;
+    use crate::GpuKind;
+
+    #[test]
+    fn a_discrete_gpu_tells_its_video_memory_instead_of_a_guess() {
+        let Ok(context) = GpuContext::new() else {
+            return;
+        };
+        if context.info().kind != GpuKind::Discrete {
+            return;
+        }
+        let available = platform_vram_bytes(&context).expect("DXGI knows the GPU wgpu opened");
+        assert!(available >= 256 << 20, "{available} bytes");
+        assert!(!GpuMemory::detect(&context, 0).guessed);
     }
 }

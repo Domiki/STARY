@@ -14,5 +14,14 @@ stary-stack = { version = "0.1.0", path = "../stary-stack" }
 thiserror = "2.0.21"
 wgpu = "30"
 
-[lints]
-workspace = true
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = ["Win32_Graphics_Dxgi"] }
+
+# The workspace forbids unsafe code; here it is denied instead, so the one module that asks
+# Windows for the size of the video memory can allow it.
+[lints.rust]
+unsafe_code = "deny"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+undocumented_unsafe_blocks = "deny"

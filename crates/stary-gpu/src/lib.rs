@@ -2,6 +2,8 @@ mod context;
 mod error;
 mod memory;
 mod stack;
+#[cfg(windows)]
+mod vram_windows;
 
 pub use context::{GpuContext, GpuInfo, GpuKind, detect};
 pub use error::GpuError;

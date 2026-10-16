@@ -1,6 +1,7 @@
 mod common;
 
 use std::path::PathBuf;
+use std::sync::{Mutex, MutexGuard, PoisonError};
 
 use common::{HEIGHT, Lcg, WIDTH, mosaic, star_field, write_all};
 use stary_core::{Frame, LinearRgbF32};
@@ -21,7 +22,14 @@ fn options(bytes: u64) -> StackOptions {
     options
 }
 
+static GPU: Mutex<()> = Mutex::new(());
+
+fn one_gpu_at_a_time() -> MutexGuard<'static, ()> {
+    GPU.lock().unwrap_or_else(PoisonError::into_inner)
+}
+
 fn stack(lights: &[PathBuf], options: &StackOptions) -> Result<StackResult, PipelineError> {
+    let _gpu = (options.device != Device::Cpu).then(one_gpu_at_a_time);
     let run = RunOptions {
         workers: 2,
         ..RunOptions::default()
@@ -226,6 +234,7 @@ fn the_gpu_clipped_mean_equals_that_of_the_processor() {
 }
 
 fn gpu_shares_the_memory() -> bool {
+    let _gpu = one_gpu_at_a_time();
     detect_gpu().is_some_and(|gpu| gpu.kind == GpuKind::Integrated)
 }
 

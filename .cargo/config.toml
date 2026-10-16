@@ -1,0 +1,10 @@
+# rsraw-sys refuses cl.exe, so LibRaw is compiled with clang (LLVM) against the MSVC ABI.
+# Target-suffixed names keep these settings off non-Windows builds.
+[env]
+CC_x86_64_pc_windows_msvc = "C:\\Program Files\\LLVM\\bin\\clang.exe"
+CXX_x86_64_pc_windows_msvc = "C:\\Program Files\\LLVM\\bin\\clang++.exe"
+# LIBRAW_NODLL: static build, otherwise libraw.h marks symbols dllimport under _MSC_VER.
+# oldnames: LibRaw calls stricmp/strnicmp/swab, which MSVC only exports via oldnames.lib.
+CFLAGS_x86_64_pc_windows_msvc = "-DLIBRAW_NODLL -Xclang --dependent-lib=oldnames"
+CXXFLAGS_x86_64_pc_windows_msvc = "-DLIBRAW_NODLL -Xclang --dependent-lib=oldnames"
+BINDGEN_EXTRA_CLANG_ARGS_x86_64_pc_windows_msvc = "-DLIBRAW_NODLL"

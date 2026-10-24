@@ -37,6 +37,7 @@ pub struct GpuContext {
     pub(crate) queue: wgpu::Queue,
     pub(crate) limits: wgpu::Limits,
     /// PCI vendor and device ids, to find the same GPU through the operating system.
+    #[cfg_attr(not(windows), allow(dead_code))]
     pub(crate) pci_ids: (u32, u32),
     info: GpuInfo,
     failure: Arc<Mutex<Option<String>>>,

@@ -15,7 +15,7 @@
 
 전부 있을 필요는 없습니다. Dark만 있거나 Flat만 있는 세션도 괜찮습니다.
 
-![Dark 프레임이 있는 보정 섹션](../assets/img/ko/stack.webp)
+![Dark 프레임이 있는 보정 섹션](../assets/img/ko/calibration.webp)
 
 ## 보정 섹션
 

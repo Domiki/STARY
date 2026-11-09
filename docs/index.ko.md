@@ -6,7 +6,7 @@ STARY는 밤하늘 사진을 보정하고 정렬해서 합치는 데스크톱 �
 별 궤적 이미지를 만들 수 있고, macOS(Apple silicon)와 Windows에서 동작합니다.
 
 <div class="stary-hero" markdown>
-![M16을 스택한 STARY 화면](assets/img/ko/stack.webp)
+![은하수를 스택한 이미지가 보이는 STARY 화면. 왼쪽에 Light 프레임 목록이 있습니다](assets/img/ko/stack.webp)
 </div>
 
 ## 어디서부터 볼까요

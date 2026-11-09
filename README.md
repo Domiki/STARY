@@ -18,7 +18,7 @@ stars draw their trails, with the heavy lifting done on your GPU. It runs on mac
 > **Version 0.1.0 (pre-release).** STARY is young: some features are experimental and Linux is not supported yet.
 
 <p align="center">
-  <img src="docs/assets/img/en/stack.webp" alt="STARY showing a stacked image of M16" width="92%" />
+  <img src="docs/assets/img/en/stack.webp" alt="STARY showing a stacked image of the Milky Way, with the list of the light frames on the left" width="92%" />
 </p>
 
 ## Features

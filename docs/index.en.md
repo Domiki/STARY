@@ -6,7 +6,7 @@ STARY is a desktop application that calibrates, aligns and stacks night-sky phot
 deep-sky stacks with noise rejection and star-trail images, on macOS (Apple silicon) and Windows.
 
 <div class="stary-hero" markdown>
-![STARY showing a stacked image of M16](assets/img/en/stack.webp)
+![STARY showing a stacked image of the Milky Way, with the list of the light frames on the left](assets/img/en/stack.webp)
 </div>
 
 ## Where to start

@@ -4,7 +4,7 @@
 이미지에 정렬하고, 같은 밝기로 맞춘 뒤 이상값을 제거하며 합칩니다. [처리 원리](../principles/alignment.md)를
 참고하세요.
 
-![M16 스택](../assets/img/ko/stack.webp)
+![은하수 스택](../assets/img/ko/stack.webp)
 
 ## 옵션
 

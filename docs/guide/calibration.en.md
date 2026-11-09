@@ -15,7 +15,7 @@ Add calibration frames to the same session as the Lights they belong to:
 
 You do not need all of them. A session with only Darks, or only Flats, is fine.
 
-![Calibration section with Dark frames](../assets/img/en/stack.webp)
+![Calibration section with Dark frames](../assets/img/en/calibration.webp)
 
 ## The Calibration section
 

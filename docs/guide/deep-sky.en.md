@@ -4,7 +4,7 @@ Choose **Stacking** in the Mode section to make a deep-sky image. STARY finds th
 aligns the frames on the representative image, brings them to the same brightness and combines them with
 outlier rejection. See [how it works](../principles/alignment.md).
 
-![A stack of M16](../assets/img/en/stack.webp)
+![A stack of the Milky Way](../assets/img/en/stack.webp)
 
 ## Options
 

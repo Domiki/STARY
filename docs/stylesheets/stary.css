@@ -1,0 +1,149 @@
+/* STARY palette and type, matching the app (ui/src/styles/index.css) and the project site. */
+@font-face {
+  font-family: 'STARY Font';
+  src: url('../assets/fonts/font.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root,
+[data-md-color-scheme='slate'] {
+  --md-text-font: 'STARY Font', system-ui, sans-serif;
+  --md-default-bg-color: #0b111b;
+  --md-default-bg-color--light: #0f1724;
+  --md-default-fg-color: #e0e4e9;
+  --md-default-fg-color--light: #9aa5b4;
+  --md-default-fg-color--lighter: #6f7a8a;
+  --md-default-fg-color--lightest: #2b384b;
+  --md-primary-fg-color: #0b111b;
+  --md-primary-bg-color: #e0e4e9;
+  --md-primary-bg-color--light: #9aa5b4;
+  --md-accent-fg-color: #d8a48f;
+  --md-accent-fg-color--transparent: rgba(216, 164, 143, 0.1);
+  --md-typeset-color: #e0e4e9;
+  --md-typeset-a-color: #d8a48f;
+  --md-code-bg-color: #0f1724;
+  --md-code-fg-color: #e0e4e9;
+  --md-footer-bg-color: #0b111b;
+  --md-footer-bg-color--dark: #090e17;
+  --md-admonition-bg-color: #0f1724;
+}
+
+.md-header {
+  border-bottom: 1px solid #2b384b;
+  box-shadow: none;
+}
+
+.md-header__title,
+.md-header__topic {
+  letter-spacing: 0.32em;
+}
+
+.md-header__button.md-logo img {
+  height: 1.6rem;
+}
+
+.md-tabs,
+.md-nav__title {
+  background: transparent;
+}
+
+.md-nav__item .md-nav__link--active {
+  color: #d8a48f;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 400;
+  color: #e0e4e9;
+}
+
+.md-typeset h1 {
+  letter-spacing: 0.01em;
+}
+
+.md-typeset code {
+  background: #151f30;
+}
+
+.md-typeset table:not([class]) {
+  border: 1px solid #2b384b;
+  font-size: 0.78rem;
+}
+
+.md-typeset table:not([class]) th {
+  background: #0f1724;
+  color: #9aa5b4;
+  font-weight: 400;
+}
+
+.md-typeset img {
+  border: 1px solid #2b384b;
+  border-radius: 8px;
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  border-color: #2b384b;
+  background: #0f1724;
+  box-shadow: none;
+}
+
+.md-typeset .admonition.warning,
+.md-typeset .admonition.note {
+  border-color: #c4b684;
+}
+
+.md-search__form {
+  background: #0f1724;
+}
+
+.md-button {
+  border-color: #d8a48f;
+  color: #d8a48f;
+}
+
+.md-button--primary {
+  background: #d8a48f;
+  border-color: #d8a48f;
+  color: #0b111b;
+}
+
+.stary-hero img {
+  border-radius: 12px;
+}
+
+/* The STARY wordmark (assets/img/logo-wordmark.png) is drawn in place of the text, which stays in
+   the page for search and screen readers. */
+/* The header shows the logo image (icon and wordmark in one); its text title is hidden. */
+.md-header__button.md-logo img {
+  height: 1.55rem;
+  width: auto;
+}
+
+.md-header__title .md-header__topic:first-child {
+  display: none;
+}
+
+.md-header__title {
+  margin-left: 0.4rem;
+}
+
+h1.stary-title {
+  font-size: 0;
+  background: url('../assets/img/logo-wordmark.png') no-repeat left center / contain;
+}
+
+h1.stary-title {
+  height: 3.2rem;
+  width: 14.5rem;
+  margin-bottom: 0.2rem;
+}
+
+/* Material hides the logo on narrow screens; the logo is the only title now, so keep it. */
+@media screen and (max-width: 76.234375em) {
+  .md-header__button.md-logo {
+    display: block;
+  }
+}

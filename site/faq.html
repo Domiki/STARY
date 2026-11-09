@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAQ — STARY</title>
+  <meta name="description" content="Answers to common questions about STARY: modes, supported files, results, platforms and first-run warnings." />
+  <meta name="theme-color" content="#0b111b" />
+  <meta property="og:title" content="FAQ — STARY" />
+  <meta property="og:description" content="Answers to common questions about STARY: modes, supported files, results, platforms and first-run warnings." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="STARY" />
+  <meta property="og:url" content="https://domiki.github.io/STARY/faq.html" />
+  <meta property="og:image" content="https://domiki.github.io/STARY/assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="assets/img/icon.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="STARY home"><img class="brand-icon" src="assets/img/icon.png" alt="" /><img class="wordmark" src="assets/img/logo-wordmark.png" alt="STARY" /></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="download.html">Download</a>
+        <a href="news.html">News</a>
+        <a href="https://stary.readthedocs.io/" class="external" rel="noopener">Documentation</a>
+        <a href="faq.html" aria-current="page">FAQ</a>
+        <a href="https://github.com/Domiki/STARY" class="external" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="eyebrow">FAQ</span>
+        <h1>Frequently asked questions</h1>
+        <p>Can't find your answer? Read the <a href="https://stary.readthedocs.io/" rel="noopener">documentation</a> or <a href="https://github.com/Domiki/STARY/issues" rel="noopener">open an issue</a>.</p>
+      </div>
+      <div class="prose" style="max-width:none; padding-bottom: 64px">
+        <details>
+          <summary>What is the difference between Trails and Stacking?</summary>
+          <div class="answer">
+          <p><strong>Trails</strong> makes star-trail images: the frames are not aligned, and the brightest value at every pixel is kept, so each star leaves a line as the sky turns. Comet and Gap Filling are variations of it.</p>
+          <p><strong>Stacking</strong> is for deep-sky images: the stars of every frame are aligned on top of each other and the frames are averaged, which lowers noise and reveals faint detail. Satellite trails and other outliers are rejected.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Which systems are supported?</summary>
+          <div class="answer">
+          <p>Windows 10/11 (64-bit) and macOS on Apple silicon. Intel Macs and Linux are not supported at the moment, although you can try building from source.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Which files can I use?</summary>
+          <div class="answer">
+          <p>Camera RAW files (read with LibRaw, for example Fujifilm X-Trans and Sony ARW), FITS, JPEG, PNG and TIFF. Calibration with JPEG or PNG is less accurate than with RAW or FITS, and STARY shows a warning for it.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Where are my results saved?</summary>
+          <div class="answer">
+          <p>After a run, the result is written automatically as a 32-bit float TIFF into a <code>stary-output</code> folder next to your first Light file, and it appears in the Result list. You can change the folder in the Operation panel. Right-click a result and choose <strong>Save as…</strong> to export TIFF, PNG, JPEG or FITS in other bit depths and color spaces.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Why is the result so dark when I open it elsewhere?</summary>
+          <div class="answer">
+          <p>The saved result is linear: it holds the sensor values as they are, which look dark on a screen. STARY shows it stretched in its own viewer. Use <strong>Save as…</strong> with the Gamma or Auto stretch brightness option for a picture that looks right everywhere, or stretch the linear file in your editing program.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Do I need a GPU?</summary>
+          <div class="answer">
+          <p>No. The GPU only makes stacking faster. Choose CPU or GPU in the settings; the GPU option is disabled when none is found.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Why does my system warn me when I open STARY?</summary>
+          <div class="answer">
+          <p>Pre-release builds are not signed with a paid developer certificate. The download page explains how to open the app on macOS and Windows.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>What are sessions for?</summary>
+          <div class="answer">
+          <p>A session groups the frames that belong together: Lights plus their own Dark, Flat, Dark Flat and Bias frames. Use one session per night, camera setup or exposure. Stacking uses every session at once; the Representative image setting picks the session whose frame the others are aligned to.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>What does HDR merge do?</summary>
+          <div class="answer">
+          <p>If you keep long and short exposures of the same field in different sessions, HDR merge stacks each exposure separately and replaces the saturated parts of the long exposure with data from the short one. It is experimental and has so far been tested on synthetic data.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Does STARY send my images anywhere?</summary>
+          <div class="answer">
+          <p>No. STARY does not upload your files or collect usage data. The only thing it asks the internet for is the list of releases on GitHub, once when it starts, to tell you when a new version is out. You can turn that off in the settings.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Is STARY free?</summary>
+          <div class="answer">
+          <p>Yes. It is open source under the MIT License. The bundled font, SUIT, is under the SIL Open Font License.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong><img class="wordmark small" src="assets/img/logo-wordmark.png" alt="STARY" /></strong> — stacking for night-sky photographs.<br />
+        Released under the <a href="https://github.com/Domiki/STARY/blob/main/LICENSE">MIT License</a>.
+      </div>
+      <div class="footer-links">
+        <a href="download.html">Download</a>
+        <a href="https://stary.readthedocs.io/" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY/issues" rel="noopener">Report an issue</a>
+        <a href="https://github.com/Domiki/STARY" rel="noopener">GitHub</a>
+        <a href="https://buymeacoffee.com/domiki" rel="noopener">Buy me a coffee</a>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

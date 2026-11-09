@@ -5,3 +5,15 @@ dist/
 *.log
 src-tauri/gen/
 target-capture/
+
+# Python (docs and brand scripts)
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Built manual (mkdocs build)
+_build/

@@ -1,0 +1,143 @@
+// Mobile menu, scroll reveal, copy buttons and the star-trail hero.
+
+const menuButton = document.querySelector('.menu-toggle')
+const nav = document.querySelector('.nav')
+menuButton?.addEventListener('click', () => {
+  const open = nav.classList.toggle('open')
+  menuButton.setAttribute('aria-expanded', String(open))
+})
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// ---------- reveal on scroll ----------
+const revealed = document.querySelectorAll('.reveal')
+if ('IntersectionObserver' in window && !reduceMotion) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        entry.target.classList.add('visible')
+        observer.unobserve(entry.target)
+      }
+    },
+    { threshold: 0.12 },
+  )
+  revealed.forEach((element) => observer.observe(element))
+} else {
+  revealed.forEach((element) => element.classList.add('visible'))
+}
+
+// ---------- copy buttons on code blocks ----------
+document.querySelectorAll('pre').forEach((block) => {
+  const button = document.createElement('button')
+  button.type = 'button'
+  button.className = 'copy-button'
+  button.textContent = 'Copy'
+  button.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(block.querySelector('code')?.textContent ?? '')
+      button.textContent = 'Copied'
+    } catch {
+      button.textContent = 'Press ⌘/Ctrl+C'
+    }
+    setTimeout(() => (button.textContent = 'Copy'), 1800)
+  })
+  block.append(button)
+})
+
+// ---------- star-trail hero ----------
+// Stars turn about a pole that sits on the right of the text; every frame fades the picture a
+// little instead of clearing it, so the path of each star stays behind it as a trail.
+const canvas = document.querySelector('.hero canvas')
+if (canvas) {
+  const context = canvas.getContext('2d')
+  const colors = ['224, 228, 233', '216, 164, 143', '154, 165, 180']
+  const STARS = 260
+  const SPEED = 0.00012
+  let width = 0
+  let height = 0
+  let pole = { x: 0, y: 0 }
+  let stars = []
+  let running = false
+  let last = 0
+
+  const makeStars = () =>
+    Array.from({ length: STARS }, () => {
+      const reach = Math.hypot(width, height) * 0.9
+      return {
+        radius: 20 + Math.random() ** 1.4 * reach,
+        angle: Math.random() * Math.PI * 2,
+        size: 0.5 + Math.random() * 1.4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 0.35 + Math.random() * 0.65,
+      }
+    })
+
+  const place = (star, angle) => ({
+    x: pole.x + Math.cos(angle) * star.radius,
+    y: pole.y + Math.sin(angle) * star.radius,
+  })
+
+  const resize = () => {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2)
+    width = canvas.clientWidth
+    height = canvas.clientHeight
+    canvas.width = width * ratio
+    canvas.height = height * ratio
+    context.setTransform(ratio, 0, 0, ratio, 0, 0)
+    context.fillStyle = '#0b111b'
+    context.fillRect(0, 0, width, height)
+    pole = { x: width * 0.76, y: height * 0.38 }
+    stars = makeStars()
+    drawStatic()
+  }
+
+  const stroke = (star, from, to) => {
+    const a = place(star, from)
+    const b = place(star, to)
+    context.strokeStyle = `rgba(${star.color}, ${star.alpha})`
+    context.lineWidth = star.size
+    context.beginPath()
+    context.moveTo(a.x, a.y)
+    context.lineTo(b.x, b.y)
+    context.stroke()
+  }
+
+  const drawStatic = () => {
+    for (const star of stars) {
+      const sweep = 0.2 + Math.random() * 0.9
+      context.strokeStyle = `rgba(${star.color}, ${star.alpha * 0.55})`
+      context.lineWidth = star.size
+      context.beginPath()
+      context.arc(pole.x, pole.y, star.radius, star.angle, star.angle + sweep)
+      context.stroke()
+    }
+  }
+
+  const frame = (now) => {
+    if (!running) return
+    const elapsed = Math.min(now - last, 48)
+    last = now
+    context.fillStyle = 'rgba(11, 17, 27, 0.02)'
+    context.fillRect(0, 0, width, height)
+    for (const star of stars) {
+      const step = elapsed * SPEED * (1 + 140 / (star.radius + 140))
+      stroke(star, star.angle, star.angle + step)
+      star.angle += step
+    }
+    requestAnimationFrame(frame)
+  }
+
+  resize()
+  window.addEventListener('resize', resize)
+
+  if (!reduceMotion) {
+    new IntersectionObserver((entries) => {
+      running = entries.some((entry) => entry.isIntersecting)
+      if (running) {
+        last = performance.now()
+        requestAnimationFrame(frame)
+      }
+    }).observe(canvas)
+  }
+}

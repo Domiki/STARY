@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>STARY — Make your own starry sky story.</title>
+  <meta name="description" content="Make your own starry sky story. STARY turns a night of photographs into one clear picture of the sky, or lets the stars draw their trails." />
+  <meta name="theme-color" content="#0b111b" />
+  <meta property="og:title" content="STARY — Make your own starry sky story." />
+  <meta property="og:description" content="Make your own starry sky story. STARY turns a night of photographs into one clear picture of the sky, or lets the stars draw their trails." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="STARY" />
+  <meta property="og:url" content="https://domiki.github.io/STARY/" />
+  <meta property="og:image" content="https://domiki.github.io/STARY/assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="assets/img/icon.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="STARY home"><img class="brand-icon" src="assets/img/icon.png" alt="" /><img class="wordmark" src="assets/img/logo-wordmark.png" alt="STARY" /></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="about.html">About</a>
+        <a href="download.html">Download</a>
+        <a href="news.html">News</a>
+        <a href="https://stary.readthedocs.io/" class="external" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY" class="external" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" style="border-top: 0">
+      <canvas aria-hidden="true"></canvas>
+      <div class="wrap">
+        <span class="badge">Pre-release</span>
+        <h1>Make your own <em>starry sky</em> story.</h1>
+        <p class="lead">
+          Every night, the sky writes its story in countless faint points of light. STARY gathers
+          them, and turns a long night under the stars into a picture you will want to keep.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="download.html">Download</a>
+          <a class="button" href="https://stary.readthedocs.io/" rel="noopener">Read the documentation</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <span class="eyebrow">What it does</span>
+        <h2>Everything between the memory card and the final image</h2>
+        <p class="section-intro">
+          Add your frames, pick a mode and press Run. STARY takes care of everything in between.
+        </p>
+        <div class="grid">
+          <article class="card reveal">
+            <h3>Deep-sky stacking</h3>
+            <p>Bring out the faint glow of nebulae and galaxies by combining many frames into one clean picture. Passing satellites and unlucky shots are taken care of for you.</p>
+          </article>
+          <article class="card reveal">
+            <h3>Star trails</h3>
+            <p>Let the stars draw the turning of the sky: classic circular trails, glowing comet tails, and unbroken lines even when your intervals were long.</p>
+          </article>
+          <article class="card reveal">
+            <h3>Clean calibration</h3>
+            <p>Remove what the camera and lens add — noise, dust and dark corners — before your picture is even built.</p>
+          </article>
+          <article class="card reveal">
+            <h3>Ground masking</h3>
+            <p>Keep the landscape sharp while the sky does its work. STARY finds the horizon for you, and you fine-tune it with a brush.</p>
+          </article>
+          <article class="card reveal">
+            <h3>Many nights, one story</h3>
+            <p>Bring several nights together, or blend bright cores and faint dust of different exposures into a single image.</p>
+            <span class="tag">Some features are experimental</span>
+          </article>
+          <article class="card reveal">
+            <h3>Fast, and faithful</h3>
+            <p>Your graphics card does the heavy lifting, so hundreds of frames come together quickly. Pictures are saved at full quality, and exported for sharing or editing whenever you like.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap showcase">
+        <div class="copy reveal">
+          <span class="eyebrow">Deep sky</span>
+          <h2>Noise goes down, detail stays</h2>
+          <p>Turn a whole night of exposures into one clean, detailed picture. STARY processes deep-sky frames quickly, and sets aside the ones that fall short so you always know what went into your image.</p>
+          <ul>
+            <li>Fast deep-sky processing for hundreds of frames</li>
+            <li>Poor frames are left out and marked for you</li>
+            <li>Calibrate each night, then combine them all</li>
+          </ul>
+        </div>
+        <figure class="shot reveal" style="margin:0"><img src="assets/img/stack.webp" alt="STARY showing a stacked image of M16 with the operation panel on the right" loading="lazy" width="2000" height="1250" /></figure>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap showcase reverse">
+        <figure class="shot reveal" style="margin:0"><img src="assets/img/trails.webp" alt="STARY showing circular star trails made from one hundred and two frames" loading="lazy" width="2000" height="1250" /></figure>
+        <div class="copy reveal">
+          <span class="eyebrow">Star trails</span>
+          <h2>A whole night of motion, in a moment</h2>
+          <p>Hundreds of frames become the slow turning of the sky in moments, so you can try styles and compositions freely.</p>
+          <ul>
+            <li>Classic, comet and gap-free trails</li>
+            <li>Works with the files straight from your camera</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap showcase">
+        <div class="copy reveal">
+          <span class="eyebrow">Ground masking</span>
+          <h2>Sky and landscape, each treated right</h2>
+          <p>One click finds the sky. Refine the edge with a brush until it feels right, and the sky and the landscape each get the treatment they deserve.</p>
+        </div>
+        <figure class="shot reveal" style="margin:0"><img src="assets/img/mask.webp" alt="Automatically detected ground shown in red over a night landscape" loading="lazy" width="2000" height="1250" /></figure>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <span class="eyebrow">How it works</span>
+        <h2>Three steps</h2>
+        <ol class="steps">
+          <li class="reveal"><h3>Add your files</h3><p>Drop in your frames, along with your calibration frames if you have them.</p></li>
+          <li class="reveal"><h3>Choose a mode</h3><p>Trails for star trails, Stacking for deep-sky images. Turn on ground masking if the landscape is in the frame.</p></li>
+          <li class="reveal"><h3>Run</h3><p>Your picture is saved automatically at full quality. Export it for sharing whenever you like.</p></li>
+        </ol>
+        <div class="actions">
+          <a class="button primary" href="download.html">Get STARY</a>
+          <a class="button" href="https://stary.readthedocs.io/" rel="noopener">Quick start guide</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="note">
+          <strong>Pre-release.</strong> STARY is still growing, and some features are experimental.
+          See the <a href="faq.html">FAQ</a> for what to expect.
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong><img class="wordmark small" src="assets/img/logo-wordmark.png" alt="STARY" /></strong> — stacking for night-sky photographs.<br />
+        Released under the <a href="https://github.com/Domiki/STARY/blob/main/LICENSE">MIT License</a>.
+      </div>
+      <div class="footer-links">
+        <a href="download.html">Download</a>
+        <a href="https://stary.readthedocs.io/" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY/issues" rel="noopener">Report an issue</a>
+        <a href="https://github.com/Domiki/STARY" rel="noopener">GitHub</a>
+        <a href="https://buymeacoffee.com/domiki" rel="noopener">Buy me a coffee</a>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

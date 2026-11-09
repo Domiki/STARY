@@ -1,0 +1,116 @@
+site_name: STARY
+site_description: User manual and technical notes for STARY, a stacking application for night-sky photographs.
+site_url: https://stary.readthedocs.io/
+repo_url: https://github.com/Domiki/STARY
+repo_name: Domiki/STARY
+edit_uri: edit/main/docs/
+docs_dir: docs
+site_dir: _build/docs  # not `site`: that folder holds the website
+copyright: Copyright &copy; 2026 Domiki · MIT License
+
+theme:
+  name: material
+  language: en
+  logo: assets/img/logo-header.png
+  favicon: assets/img/icon.png
+  font: false
+  palette:
+    scheme: slate
+    primary: custom
+    accent: custom
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+
+extra_css:
+  - stylesheets/stary.css
+
+extra:
+  homepage: https://domiki.github.io/STARY/
+  generator: false
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.keys
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: ko
+          name: 한국어
+          build: true
+          site_name: STARY
+          nav_translations:
+            Home: 홈
+            Getting started: 시작하기
+            Install: 설치
+            Quick start: 빠른 시작
+            User guide: 사용자 가이드
+            The interface: 화면 구성
+            Files and sessions: 파일과 세션
+            Calibration: 보정
+            Star trails: 별 궤적
+            Deep-sky stacking: 딥스카이 스태킹
+            Ground masking: 지면 마스킹
+            Saving results: 결과 저장
+            Settings: 설정
+            How it works: 처리 원리
+            Overview: 개요
+            Alignment and normalization: 정렬과 정규화
+            Outlier rejection: 이상값 제거
+            Star trails (principle): 별 궤적 합성
+            HDR merge: HDR 합성
+            Reference: 참고
+            Supported files: 지원하는 파일
+            Troubleshooting: 문제 해결
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Install: install.md
+      - Quick start: quickstart.md
+  - User guide:
+      - The interface: guide/interface.md
+      - Files and sessions: guide/files.md
+      - Calibration: guide/calibration.md
+      - Star trails: guide/star-trails.md
+      - Deep-sky stacking: guide/deep-sky.md
+      - Ground masking: guide/ground-masking.md
+      - Saving results: guide/saving.md
+      - Settings: guide/settings.md
+  - How it works:
+      - Overview: principles/index.md
+      - Calibration: principles/calibration.md
+      - Alignment and normalization: principles/alignment.md
+      - Outlier rejection: principles/rejection.md
+      - Star trails (principle): principles/trails.md
+      - HDR merge: principles/hdr.md
+  - Reference:
+      - Supported files: reference/formats.md
+      - Troubleshooting: reference/troubleshooting.md

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>News — STARY</title>
+  <meta name="description" content="Release notes and announcements for STARY." />
+  <meta name="theme-color" content="#0b111b" />
+  <meta property="og:title" content="News — STARY" />
+  <meta property="og:description" content="Release notes and announcements for STARY." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="STARY" />
+  <meta property="og:url" content="https://domiki.github.io/STARY/news.html" />
+  <meta property="og:image" content="https://domiki.github.io/STARY/assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="assets/img/icon.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="STARY home"><img class="brand-icon" src="assets/img/icon.png" alt="" /><img class="wordmark" src="assets/img/logo-wordmark.png" alt="STARY" /></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="download.html">Download</a>
+        <a href="news.html" aria-current="page">News</a>
+        <a href="https://stary.readthedocs.io/" class="external" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY" class="external" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="eyebrow">News</span>
+        <h1>News and release notes</h1>
+        <p>Announcements, new versions and what changed. Full release files are on <a href="https://github.com/Domiki/STARY/releases" rel="noopener">GitHub</a>.</p>
+      </div>
+
+      <div class="prose" style="max-width:none; padding-bottom: 64px">
+        <!--
+          TEMPLATE for a new entry: copy the <article class="post"> block below, put the newest
+          entry on top, and change the date, title, tag and text.
+          <article class="post">
+            <time datetime="YYYY-MM-DD">Month D, YYYY</time>
+            <h2>Title <span class="tagline">Release</span></h2>
+            <p>One or two sentences.</p>
+            <ul><li>What is new</li></ul>
+          </article>
+        -->
+
+        <article class="post">
+          <time datetime="2026-11-01">November 2026</time>
+          <h2>STARY 0.1.0 pre-release <span class="tagline">Release</span></h2>
+          <p>The first public build of STARY for macOS (Apple silicon) and Windows.</p>
+          <ul>
+            <li>Deep-sky stacking with alignment, normalization and sigma clipping</li>
+            <li>Star trails: Lighten, Comet and Gap Filling</li>
+            <li>Calibration with Dark, Flat, Dark Flat and Bias frames or masters</li>
+            <li>Ground masking with automatic sky detection</li>
+            <li>GPU acceleration, 32-bit float output and Save as… with color spaces</li>
+            <li>Stacking of several sessions and an experimental HDR merge</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong><img class="wordmark small" src="assets/img/logo-wordmark.png" alt="STARY" /></strong> — stacking for night-sky photographs.<br />
+        Released under the <a href="https://github.com/Domiki/STARY/blob/main/LICENSE">MIT License</a>.
+      </div>
+      <div class="footer-links">
+        <a href="download.html">Download</a>
+        <a href="https://stary.readthedocs.io/" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY/issues" rel="noopener">Report an issue</a>
+        <a href="https://github.com/Domiki/STARY" rel="noopener">GitHub</a>
+        <a href="https://buymeacoffee.com/domiki" rel="noopener">Buy me a coffee</a>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

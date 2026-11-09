@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Download — STARY</title>
+  <meta name="description" content="Download STARY for macOS (Apple silicon) or Windows, with installation notes and build instructions." />
+  <meta name="theme-color" content="#0b111b" />
+  <meta property="og:title" content="Download — STARY" />
+  <meta property="og:description" content="Download STARY for macOS (Apple silicon) or Windows, with installation notes and build instructions." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="STARY" />
+  <meta property="og:url" content="https://domiki.github.io/STARY/download.html" />
+  <meta property="og:image" content="https://domiki.github.io/STARY/assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="assets/img/icon.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="STARY home"><img class="brand-icon" src="assets/img/icon.png" alt="" /><img class="wordmark" src="assets/img/logo-wordmark.png" alt="STARY" /></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="download.html" aria-current="page">Download</a>
+        <a href="news.html">News</a>
+        <a href="https://stary.readthedocs.io/" class="external" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY" class="external" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="eyebrow">Download</span>
+        <h1>Get STARY</h1>
+        <p>The current version is <strong>0.1.0</strong>, a pre-release. Pick the file for your system from the latest release on GitHub.</p>
+      </div>
+
+      <div class="platforms">
+        <div class="platform">
+          <h3>macOS</h3>
+          <p class="meta">Apple silicon (M1 or later) · .dmg</p>
+          <a class="button primary" href="https://github.com/Domiki/STARY/releases" rel="noopener">Download from GitHub</a>
+        </div>
+        <div class="platform">
+          <h3>Windows</h3>
+          <p class="meta">64-bit Windows 10 / 11 · installer</p>
+          <a class="button primary" href="https://github.com/Domiki/STARY/releases" rel="noopener">Download from GitHub</a>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:14px">Intel Macs and Linux are not supported yet. Checksums (SHA-256) are listed in each release's notes.</p>
+
+      <section style="padding-top:48px">
+        <h2>System requirements</h2>
+        <table>
+          <tr><th>Memory</th><td>16 GB or more is recommended for 24–26 megapixel RAW files. The memory budget in the Operation panel limits how much STARY uses.</td></tr>
+          <tr><th>Graphics</th><td>Optional. A GPU with Metal, DirectX 12 or Vulkan speeds up stacking. Without one, the CPU is used.</td></tr>
+          <tr><th>Disk</th><td>Results are 32-bit float TIFF files; a 26-megapixel result is about 300 MB.</td></tr>
+          <tr><th>Input</th><td>Camera RAW, FITS, JPEG, PNG and TIFF.</td></tr>
+        </table>
+      </section>
+
+      <section style="padding-top:24px">
+        <h2>The first time you open it</h2>
+        <p class="muted">The pre-release builds are not signed by a paid developer account, so your system shows a warning once.</p>
+        <h3 style="margin-top:22px">macOS</h3>
+        <p>Open the .dmg and drag STARY to Applications. If macOS refuses to open it, right-click the app and choose <strong>Open</strong>, or allow it under <em>System Settings → Privacy &amp; Security → Open Anyway</em>. If it says the app is damaged, remove the quarantine flag:</p>
+        <pre><code>xattr -cr /Applications/STARY.app</code></pre>
+        <h3>Windows</h3>
+        <p>Run the installer. If Windows SmartScreen appears, choose <strong>More info → Run anyway</strong>. The installer needs the WebView2 runtime, which is already part of Windows 11.</p>
+      </section>
+
+      <section style="padding-top:24px">
+        <h2>Build from source</h2>
+        <p class="muted">STARY is built with Tauri (Rust and React). You need Rust (the exact version is pinned in <code>rust-toolchain.toml</code>) and Node.js.</p>
+        <pre><code>git clone https://github.com/Domiki/STARY.git
+cd STARY
+npm install
+npm --prefix ui install
+npx tauri build</code></pre>
+        <p class="muted">On Windows you also need the Visual Studio Build Tools (C++ workload) and LLVM, which is used to compile LibRaw; see <code>.cargo/config.toml</code>. The installers appear under <code>target/release/bundle</code>.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong><img class="wordmark small" src="assets/img/logo-wordmark.png" alt="STARY" /></strong> — stacking for night-sky photographs.<br />
+        Released under the <a href="https://github.com/Domiki/STARY/blob/main/LICENSE">MIT License</a>.
+      </div>
+      <div class="footer-links">
+        <a href="download.html">Download</a>
+        <a href="https://stary.readthedocs.io/" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY/issues" rel="noopener">Report an issue</a>
+        <a href="https://github.com/Domiki/STARY" rel="noopener">GitHub</a>
+        <a href="https://buymeacoffee.com/domiki" rel="noopener">Buy me a coffee</a>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

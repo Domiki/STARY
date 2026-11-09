@@ -1,12 +1,17 @@
 name: Deploy site
 
 # Publishes the project site (site/) to GitHub Pages. The manual in docs/ is built by Read the Docs.
+# The download buttons are pointed at the files of the newest release each time, so the site is
+# published again when a release is published.
 on:
   push:
     branches: [main]
     paths:
       - 'site/**'
       - '.github/workflows/pages.yml'
+      - '.github/scripts/fill_downloads.py'
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
@@ -27,6 +32,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Point the download buttons at the newest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/fill_downloads.py site
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

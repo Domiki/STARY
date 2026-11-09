@@ -38,27 +38,28 @@
       <div class="page-head">
         <span class="eyebrow">Download</span>
         <h1>Get STARY</h1>
-        <p>The current version is <strong>0.1.0</strong>, a pre-release. Pick the file for your system from the latest release on GitHub.</p>
+        <p><span data-version-line>The current version is <strong>0.1.0</strong>, a pre-release.</span> Pick the file for your system.</p>
       </div>
 
       <div class="platforms">
         <div class="platform">
           <h3>macOS</h3>
           <p class="meta">Apple silicon (M1 or later) · .dmg</p>
-          <a class="button primary" href="https://github.com/Domiki/STARY/releases" rel="noopener">Download from GitHub</a>
+          <a class="button primary" href="https://github.com/Domiki/STARY/releases" data-asset="dmg" rel="noopener">Download for macOS</a>
         </div>
         <div class="platform">
           <h3>Windows</h3>
           <p class="meta">64-bit Windows 10 / 11 · installer</p>
-          <a class="button primary" href="https://github.com/Domiki/STARY/releases" rel="noopener">Download from GitHub</a>
+          <a class="button primary" href="https://github.com/Domiki/STARY/releases" data-asset="exe" rel="noopener">Download for Windows</a>
+          <p class="meta" style="margin:12px 0 0">Prefer an MSI package? <a href="https://github.com/Domiki/STARY/releases" data-asset="msi" rel="noopener">Download the .msi</a></p>
         </div>
       </div>
-      <p class="muted" style="margin-top:14px">Intel Macs and Linux are not supported yet. Checksums (SHA-256) are listed in each release's notes.</p>
+      <p class="muted" style="margin-top:14px">Intel Macs and Linux are not supported yet. Checksums (SHA-256) are listed in each release's notes. <a href="https://github.com/Domiki/STARY/releases" rel="noopener">All releases</a></p>
 
       <section style="padding-top:48px">
         <h2>System requirements</h2>
         <table>
-          <tr><th>Memory</th><td>16 GB or more is recommended for 24–26 megapixel RAW files. The memory budget in the Operation panel limits how much STARY uses.</td></tr>
+          <tr><th>Memory</th><td>16 GB or more is recommended for 24–26 megapixel RAW files. The memory budget in the settings limits how much STARY uses.</td></tr>
           <tr><th>Graphics</th><td>Optional. A GPU with Metal, DirectX 12 or Vulkan speeds up stacking. Without one, the CPU is used.</td></tr>
           <tr><th>Disk</th><td>Results are 32-bit float TIFF files; a 26-megapixel result is about 300 MB.</td></tr>
           <tr><th>Input</th><td>Camera RAW, FITS, JPEG, PNG and TIFF.</td></tr>

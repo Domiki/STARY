@@ -33,7 +33,7 @@ Pre-release builds are not signed with a paid developer certificate, so your sys
 ## Requirements
 
 - **Memory**: 16 GB or more is recommended for 24–26 megapixel RAW files. The *Memory budget* in the
-  Operation panel limits how much STARY uses.
+  settings limits how much STARY uses.
 - **GPU**: optional. Metal, DirectX 12 or Vulkan speeds up stacking.
 - **Disk**: a 26-megapixel result is about 300 MB (32-bit float TIFF).
 

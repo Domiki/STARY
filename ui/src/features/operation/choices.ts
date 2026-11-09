@@ -1,7 +1,7 @@
 import { useFileListStore } from '../file-list/store'
 import { maskOf, useMaskStore } from '../mask/store'
 import { useSettingsStore } from '../settings/store'
-import { activeSession } from './job-request'
+import { maskSessionOf } from './reference-session'
 import type { OperationChoices } from './job-request'
 import { useOperationStore } from './store'
 
@@ -28,12 +28,16 @@ export const choicesFrom = (
     separate: operation.groundSeparate,
     maskReady,
   },
+  referenceSession: operation.referenceSession,
+  hdr: operation.hdr,
 })
 
 /** What is on screen to choose from, read at this moment (for the moment a job starts). */
 export function readChoices(): OperationChoices {
-  const sessionId = activeSession(useFileListStore.getState().workspace)?.id
+  const operation = useOperationStore.getState()
+  const workspace = useFileListStore.getState().workspace
+  const sessionId = maskSessionOf(workspace, operation.mode, operation.referenceSession)?.id
   const { entries, busy } = useMaskStore.getState()
   const maskReady = maskOf(entries, sessionId).phase === 'applied' && !busy
-  return choicesFrom(useOperationStore.getState(), useSettingsStore.getState(), maskReady)
+  return choicesFrom(operation, useSettingsStore.getState(), maskReady)
 }

@@ -139,6 +139,8 @@
       "trails": "Trails",
       "stacking": "Stacking",
       "combine": "결합 방식",
+      "hdr": "HDR 합성",
+      "reference": "대표 이미지",
       "alignModel": "정렬 모델",
       "average": "평균",
       "sigma": "Sigma Clip",

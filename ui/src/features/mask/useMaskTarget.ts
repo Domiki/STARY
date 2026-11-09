@@ -1,6 +1,6 @@
 import { representativeOf } from '../file-list/model/representative'
 import { useFileListStore } from '../file-list/store'
-import { activeSession } from '../operation/job-request'
+import { maskSessionOf } from '../operation/reference-session'
 import { useOperationStore } from '../operation/store'
 
 /**
@@ -9,7 +9,9 @@ import { useOperationStore } from '../operation/store'
  */
 export function useMaskTarget(): { sessionId: string; path: string } | null {
   const masking = useOperationStore((state) => state.groundMasking)
-  const session = useFileListStore((state) => activeSession(state.workspace))
+  const mode = useOperationStore((state) => state.mode)
+  const chosen = useOperationStore((state) => state.referenceSession)
+  const session = useFileListStore((state) => maskSessionOf(state.workspace, mode, chosen))
   const selected = useFileListStore((state) => state.selection.primary)
   const representative = session ? representativeOf(session) : null
   if (!masking || !session || !representative || selected !== representative.path) return null

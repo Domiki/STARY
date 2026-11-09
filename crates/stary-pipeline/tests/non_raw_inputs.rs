@@ -41,6 +41,7 @@ fn spec(lights: Vec<PathBuf>, result_folder: &Path) -> JobSpec {
         dark: CalSource::None,
         dark_flat: CalSource::None,
         flat: CalSource::None,
+        more_sessions: Vec::new(),
         apply_calibration: true,
         masters_folder: None,
         calibrated_folder: None,
@@ -52,6 +53,7 @@ fn spec(lights: Vec<PathBuf>, result_folder: &Path) -> JobSpec {
         masking: None,
         device: Device::Cpu,
         read: ReadMode::Exact,
+        hdr: false,
     }
 }
 

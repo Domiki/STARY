@@ -20,15 +20,15 @@ pub use control::{Cancel, Progress, Stage};
 pub use demosaicer::Demosaicer;
 pub use error::PipelineError;
 pub use job::{
-    CalSource, FrameCounts, JobKind, JobOutput, JobReport, JobSpec, LeftOut, OneRead, run_job,
-    unused_file_name,
+    CalSource, FrameCounts, JobKind, JobOutput, JobReport, JobSpec, LeftOut, OneRead, SessionInput,
+    run_job, unused_file_name,
 };
 pub use masking::{Ground, Masking};
 pub use master_build::{MasterNote, ReadMode, RunOptions, build_master, integrate_master};
 pub use stacking::{
-    Combine, ComputeDevice, Device, FrameQuality, FrameReport, Poor, Reference, SkipReason,
-    Skipped, StackOptions, StackPlan, StackResult, StackSettings, detect_gpu, no_observer,
-    plan as plan_stack, run_stacking,
+    Combine, ComputeDevice, Device, Exposure, FrameQuality, FrameReport, Poor, Reference,
+    SkipReason, Skipped, StackGroup, StackOptions, StackPlan, StackResult, StackSettings,
+    detect_gpu, no_observer, plan as plan_stack, run_stacking, run_stacking_groups,
 };
 pub use stary_gpu::{GpuInfo, GpuKind};
 pub use trails::{GapFillTuning, GapStats, TrailsMethod, TrailsResult, TrailsSettings, run_trails};

@@ -27,7 +27,8 @@ pub use crate::calibrate::Observer;
 
 pub struct PrepareContext<'a> {
     pub lights: &'a [PathBuf],
-    pub calibration: Option<&'a CalibrationSet>,
+    /// The calibration of every light, in the order of `lights`.
+    pub calibrations: &'a [Option<&'a CalibrationSet>],
     pub demosaicer: &'a Demosaicer,
     pub decode: DecodeFn,
     pub detect: DetectParams,
@@ -78,7 +79,7 @@ pub fn demosaiced_planes(
 ) -> Result<Planes, PipelineError> {
     let path: &Path = &context.lights[index];
     let mut frame = (context.decode)(path)?;
-    if let Some(set) = context.calibration {
+    if let Some(set) = context.calibrations[index] {
         set.apply(&mut frame.samples, frame.black, frame.maximum)
             .map_err(|source| PipelineError::Geometry {
                 path: path.to_path_buf(),

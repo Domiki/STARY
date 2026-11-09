@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import type { Role } from '../../ipc/types'
-import { placeInfo } from '../file-list/model/placement'
+import { createSession, placeInfo } from '../file-list/model/placement'
 import { setRepresentative } from '../file-list/model/representative'
 import { info } from '../file-list/model/test-fixtures'
 import { type Workspace, emptyWorkspace } from '../file-list/model/workspace'
@@ -19,6 +19,8 @@ const choices: OperationChoices = {
   device: 'cpu',
   read: 'exact',
   ground: { masking: false, separate: false, maskReady: false },
+  referenceSession: null,
+  hdr: false,
 }
 
 function workspace(entries: [Role, string][] = [], master?: [Role, string]): Workspace {
@@ -175,5 +177,115 @@ describe('ground masking in a request', () => {
 
   it('sends no masking when it is off', () => {
     expect(buildJobRequest('trails', 'trails', workspace(), choices)!.masking).toBeNull()
+  })
+})
+
+describe('stacking several sessions', () => {
+  const twoSessions = (): Workspace => {
+    let current = workspace([['dark', '/n/darks/1.raf']])
+    const first = current.sessions[0]!.id
+    const second = createSession('s2')
+    current = { ...current, sessions: [...current.sessions, second] }
+    for (const path of ['/m/lights/1.raf', '/m/lights/2.raf']) {
+      current = placeInfo(current, info({ path }), { sessionId: 's2', role: 'light' }).workspace
+    }
+    current = placeInfo(current, info({ path: '/m/darks/1.raf' }), { sessionId: 's2', role: 'dark' }).workspace
+    return { ...current, activeSessionId: first }
+  }
+  const stacking = { ...choices, stacking: { ...choices.stacking, combine: 'sigma' as const } }
+
+  it('stacks the other sessions with the active one, each with its own calibration', () => {
+    const request = buildJobRequest('stacking', 'stacking', twoSessions(), stacking)!
+    expect(request.lights).toEqual(['/n/lights/1.raf', '/n/lights/2.raf'])
+    expect(request.dark).toEqual({ kind: 'frames', paths: ['/n/darks/1.raf'] })
+    expect(request.more_sessions).toHaveLength(1)
+    expect(request.more_sessions[0]!.lights).toEqual(['/m/lights/1.raf', '/m/lights/2.raf'])
+    expect(request.more_sessions[0]!.dark).toEqual({ kind: 'frames', paths: ['/m/darks/1.raf'] })
+  })
+
+  it('lines the stacks up on the session that was chosen', () => {
+    const request = buildJobRequest(
+      'stacking',
+      'stacking',
+      twoSessions(),
+      { ...stacking, referenceSession: 's2', ground: { masking: true, separate: true, maskReady: true } },
+    )!
+    expect(request.lights).toEqual(['/m/lights/1.raf', '/m/lights/2.raf'])
+    expect(request.more_sessions[0]!.lights).toEqual(['/n/lights/1.raf', '/n/lights/2.raf'])
+    expect(request.masking?.session_id).toBe('s2')
+  })
+
+  it('leaves out a session whose frames have another size', () => {
+    let current = twoSessions()
+    current = placeInfo(current, info({ path: '/m/lights/3.raf', width: 10, height: 10 }), {
+      sessionId: 's2',
+      role: 'light',
+    }).workspace
+    const small = createSession('s3')
+    current = { ...current, sessions: [...current.sessions, small] }
+    current = placeInfo(current, info({ path: '/o/lights/1.raf', width: 10, height: 10 }), {
+      sessionId: 's3',
+      role: 'light',
+    }).workspace
+    const request = buildJobRequest('stacking', 'stacking', current, stacking)!
+    expect(request.more_sessions.map(({ lights }) => lights[0])).toEqual(['/m/lights/1.raf'])
+  })
+
+  it('does not stack other sessions for trails', () => {
+    const request = buildJobRequest('trails', 'trails', twoSessions(), choices)!
+    expect(request.more_sessions).toEqual([])
+  })
+
+  it('can run with one light in each session', () => {
+    let current = placeInfo(emptyWorkspace(), info({ path: '/n/1.raf' })).workspace
+    current = { ...current, sessions: [...current.sessions, createSession('s2')] }
+    expect(canRun('stacking', 'stacking', current, stacking)).toBe(false)
+    current = placeInfo(current, info({ path: '/m/1.raf' }), { sessionId: 's2', role: 'light' }).workspace
+    expect(canRun('stacking', 'stacking', current, stacking)).toBe(true)
+  })
+})
+
+describe('joining exposures', () => {
+  const sessionsOf = (...exposures: number[][]): Workspace => {
+    let current = emptyWorkspace()
+    exposures.forEach((seconds, session) => {
+      const id = `s${session + 1}`
+      current = { ...current, sessions: [...current.sessions, createSession(id)] }
+      seconds.forEach((exposure, light) => {
+        current = placeInfo(current, info({ path: `/${id}/${light}.raf`, exposure_s: exposure, iso: 800 }), {
+          sessionId: id,
+          role: 'light',
+        }).workspace
+      })
+    })
+    return { ...current, activeSessionId: 's1' }
+  }
+  const wanted = {
+    ...choices,
+    hdr: true,
+    stacking: { ...choices.stacking, combine: 'sigma' as const },
+    ground: { masking: true, separate: true, maskReady: true },
+  }
+
+  it('asks for the join when the sessions hold different exposures', () => {
+    const request = buildJobRequest('stacking', 'stacking', sessionsOf([30, 30], [4, 4]), wanted)!
+    expect(request.hdr).toBe(true)
+    expect(request.masking?.ground).toBe('with_sky')
+  })
+
+  it('does not join sessions of the same exposure', () => {
+    const request = buildJobRequest('stacking', 'stacking', sessionsOf([30, 30], [30, 30]), wanted)!
+    expect(request.hdr).toBe(false)
+    expect(request.masking?.ground).toBe('separate')
+  })
+
+  it('does not join when a session holds more than one exposure', () => {
+    const request = buildJobRequest('stacking', 'stacking', sessionsOf([30, 4], [4, 4]), wanted)!
+    expect(request.hdr).toBe(false)
+  })
+
+  it('does not join unless it is asked for', () => {
+    const request = buildJobRequest('stacking', 'stacking', sessionsOf([30, 30], [4, 4]), { ...wanted, hdr: false })!
+    expect(request.hdr).toBe(false)
   })
 })

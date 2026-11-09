@@ -139,6 +139,8 @@
       "trails": "Trails",
       "stacking": "Stacking",
       "combine": "Combine method",
+      "hdr": "HDR merge",
+      "reference": "Representative image",
       "alignModel": "Alignment model",
       "average": "Average",
       "sigma": "Sigma clip",

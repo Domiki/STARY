@@ -6,8 +6,9 @@ use std::sync::{Mutex, MutexGuard, PoisonError};
 use common::{HEIGHT, Lcg, WIDTH, mosaic, star_field, write_all};
 use stary_core::{Frame, LinearRgbF32};
 use stary_pipeline::{
-    Cancel, ComputeDevice, Device, GpuKind, MemoryBudget, PipelineError, RunOptions, StackOptions,
-    StackResult, detect_gpu, no_observer, run_stacking,
+    Cancel, ComputeDevice, Device, Exposure, GpuKind, MemoryBudget, PipelineError, RunOptions,
+    StackGroup, StackOptions, StackResult, detect_gpu, no_observer, run_stacking,
+    run_stacking_groups,
 };
 use stary_register::{DetectParams, find_stars};
 use stary_stack::Rejection;
@@ -377,4 +378,135 @@ fn a_cancelled_stack_stops() {
         &|_| {},
     );
     assert!(matches!(result, Err(PipelineError::Cancelled)));
+}
+
+fn brightened(mut frame: Frame, extra: u16) -> Frame {
+    for sample in &mut frame.samples {
+        *sample = sample.saturating_add(extra);
+    }
+    frame
+}
+
+#[test]
+fn two_nights_are_stacked_together_and_judged_each_by_its_own_frames() {
+    let first_night = tempfile::tempdir().unwrap();
+    let second_night = tempfile::tempdir().unwrap();
+    let frames = drifting_frames(8);
+    let (early, late) = frames.split_at(6);
+    let early = write_all(first_night.path(), early);
+    let late: Vec<Frame> = late
+        .iter()
+        .cloned()
+        .map(|frame| brightened(frame, 6000))
+        .collect();
+    let late = write_all(second_night.path(), &late);
+    let groups = [
+        StackGroup {
+            lights: &early,
+            calibration: None,
+            exposure: None,
+        },
+        StackGroup {
+            lights: &late,
+            calibration: None,
+            exposure: None,
+        },
+    ];
+    let run = RunOptions {
+        workers: 2,
+        ..RunOptions::default()
+    };
+    let result = run_stacking_groups(
+        &groups,
+        &options(1 << 30),
+        &run,
+        &no_observer,
+        &Cancel::default(),
+        &|_| {},
+    )
+    .unwrap();
+    assert_eq!(result.frames, 8);
+    assert!(result.skipped.is_empty(), "{:?}", result.skipped);
+    assert_eq!(result.reports.len(), 8);
+}
+
+fn doubled(frame: &Frame) -> Frame {
+    let mut frame = frame.clone();
+    for sample in &mut frame.samples {
+        *sample = sample.saturating_mul(2);
+    }
+    frame
+}
+
+fn brightest(image: &LinearRgbF32) -> f32 {
+    luminance(image).into_iter().fold(0.0, f32::max)
+}
+
+fn join_two_exposures(device: Device) {
+    let _gpu = (device != Device::Cpu).then(one_gpu_at_a_time);
+    let dir = tempfile::tempdir().unwrap();
+    let short_frames = drifting_frames(6);
+    let long_frames: Vec<Frame> = short_frames.iter().map(doubled).collect();
+    let long = write_all(&dir.path().join("long"), &long_frames);
+    let short = write_all(&dir.path().join("short"), &short_frames);
+    let exposure = |seconds| {
+        Some(Exposure {
+            seconds,
+            iso: 100.0,
+        })
+    };
+    let groups = [
+        StackGroup {
+            lights: &long,
+            calibration: None,
+            exposure: exposure(20.0),
+        },
+        StackGroup {
+            lights: &short,
+            calibration: None,
+            exposure: exposure(10.0),
+        },
+    ];
+    let run = RunOptions {
+        workers: 2,
+        ..RunOptions::default()
+    };
+    let mut joined = options(1 << 30);
+    joined.device = device;
+    joined.hdr = true;
+    let hdr = run_stacking_groups(
+        &groups,
+        &joined,
+        &run,
+        &no_observer,
+        &Cancel::default(),
+        &|_| {},
+    )
+    .unwrap();
+    assert_eq!(hdr.frames, 12);
+
+    let long_only = brightest(&stack(&long, &options(1 << 30)).unwrap().image);
+    let short_only = brightest(&stack(&short, &options(1 << 30)).unwrap().image);
+    let joined = brightest(&hdr.image);
+    assert!(
+        joined > 1.2 * long_only,
+        "{joined} against {long_only} cut off"
+    );
+    let wanted = 2.0 * short_only;
+    assert!(
+        (joined - wanted).abs() < 0.12 * wanted,
+        "{joined} but the shorter stack says {wanted}"
+    );
+}
+
+#[test]
+fn joining_two_exposures_recovers_the_stars_the_longer_one_cut_off() {
+    join_two_exposures(Device::Cpu);
+}
+
+#[test]
+fn joining_two_exposures_works_on_the_gpu_too() {
+    if detect_gpu().is_some() {
+        join_two_exposures(Device::Gpu);
+    }
 }

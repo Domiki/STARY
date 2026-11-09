@@ -1,4 +1,5 @@
 mod device;
+mod hdr;
 mod integrate;
 mod plan;
 mod prepare;
@@ -6,13 +7,13 @@ mod quality;
 mod registration;
 mod streaming;
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use stary_calib::CalibrationSet;
 use stary_core::{COLORS, Frame, LinearRgbF32, ResultColor};
 use stary_raw::{DemosaicQuality, OutputColor};
 use stary_register::{AlignError, AlignParams, Alignment, DetectParams, Model};
-use stary_stack::{Kernel, Matching, Rejection};
+use stary_stack::{Kernel, Matching, Rejection, SkyLevel};
 
 use self::{
     device::{Backend, choose_backend},
@@ -33,6 +34,7 @@ use crate::{
 };
 
 pub use device::{ComputeDevice, Device, detect_gpu};
+pub use hdr::Exposure;
 pub use plan::{StackPlan, StackShape, plan_stacking as plan};
 pub use quality::{FrameQuality, Poor};
 pub use registration::Reference;
@@ -51,6 +53,8 @@ pub struct StackOptions {
     pub budget: MemoryBudget,
     pub masking: Option<Masking>,
     pub device: Device,
+    /// Stacks the sessions of each exposure apart and joins them (see `hdr`).
+    pub hdr: bool,
 }
 
 /// How the aligned frames are combined.
@@ -131,6 +135,7 @@ impl StackOptions {
             budget,
             masking: None,
             device: Device::Auto,
+            hdr: false,
         }
     }
 }
@@ -211,6 +216,106 @@ pub fn no_observer(_: usize, _: &Frame) -> Result<(), PipelineError> {
     Ok(())
 }
 
+/// The exposures to stack apart, the longest first, and the exposure of each light's session
+/// (an index into them). One exposure when the sessions are not to be joined.
+fn exposure_classes(
+    groups: &[StackGroup],
+    ranges: &[std::ops::Range<usize>],
+    hdr: bool,
+) -> (Vec<Exposure>, Vec<usize>) {
+    let exposures: Option<Vec<Exposure>> = groups.iter().map(|group| group.exposure).collect();
+    let mut distinct: Vec<Exposure> = Vec::new();
+    for exposure in exposures.iter().flatten().filter(|_| hdr) {
+        if !distinct.iter().any(|known| known.same_as(*exposure)) {
+            distinct.push(*exposure);
+        }
+    }
+    let (Some(exposures), true) = (exposures, distinct.len() >= 2) else {
+        let total = ranges.last().map_or(0, |range| range.end);
+        return (Vec::new(), vec![0; total]);
+    };
+    distinct.sort_by(|a, b| b.ratio_to(*a).total_cmp(&1.0));
+    let mut class_of_light = Vec::new();
+    for (exposure, range) in exposures.iter().zip(ranges) {
+        let class = distinct
+            .iter()
+            .position(|known| known.same_as(*exposure))
+            .unwrap_or(0);
+        class_of_light.extend(range.clone().map(|_| class));
+    }
+    (distinct, class_of_light)
+}
+
+/// The sky every frame of an exposure is matched to: that of the reference frame for its own
+/// exposure, else of the frame with the most stars.
+fn class_skies(
+    prepared: &[Prepared],
+    class_of_light: &[usize],
+    classes: usize,
+    reference: usize,
+) -> Vec<[SkyLevel; COLORS]> {
+    (0..classes.max(1))
+        .map(|class| {
+            let chosen = if class_of_light[reference] == class {
+                reference
+            } else {
+                (0..prepared.len())
+                    .filter(|&index| class_of_light[index] == class)
+                    .max_by_key(|&index| prepared[index].stars.len())
+                    .unwrap_or(reference)
+            };
+            prepared[chosen].sky
+        })
+        .collect()
+}
+
+fn group_ranges(groups: &[StackGroup]) -> Vec<std::ops::Range<usize>> {
+    let mut start = 0;
+    groups
+        .iter()
+        .map(|group| {
+            let range = start..start + group.lights.len();
+            start = range.end;
+            range
+        })
+        .collect()
+}
+
+/// Every session is judged by its own frames: the nights differ in how bright their sky is, and
+/// judging them together would throw a whole night away.
+fn assess_by_session(
+    qualities: &[FrameQuality],
+    ranges: &[std::ops::Range<usize>],
+    reference: usize,
+) -> Vec<Option<Poor>> {
+    ranges
+        .iter()
+        .flat_map(|range| {
+            let keep = reference.checked_sub(range.start).unwrap_or(usize::MAX);
+            quality::assess(&qualities[range.clone()], keep)
+        })
+        .collect()
+}
+
+/// The sessions are laid on one picture, so their frames must have the size and the pixel layout
+/// of the first light.
+fn check_same_sensor(groups: &[StackGroup], first: &Path) -> Result<(), PipelineError> {
+    let reference = stary_io::probe_file(first)?.details;
+    for light in groups
+        .iter()
+        .skip(1)
+        .filter_map(|group| group.lights.first())
+    {
+        let details = stary_io::probe_file(light)?.details;
+        if (details.width, details.height, details.layout)
+            != (reference.width, reference.height, reference.layout)
+        {
+            return Err(PipelineError::OtherSensor(light.clone()));
+        }
+    }
+    Ok(())
+}
+
 fn prepare_all(
     context: &PrepareContext,
     workers: usize,
@@ -253,6 +358,15 @@ fn matching_for(frame: &Prepared, reference: &Prepared, normalize: bool) -> [Mat
     })
 }
 
+/// The lights of one session with the calibration that is made for them.
+#[derive(Clone, Copy)]
+pub struct StackGroup<'a> {
+    pub lights: &'a [PathBuf],
+    pub calibration: Option<&'a CalibrationSet>,
+    /// What the lights were exposed with; needed to join exposures.
+    pub exposure: Option<Exposure>,
+}
+
 /// Aligns the calibrated lights on one of them and combines them with outlier rejection.
 pub fn run_stacking(
     lights: &[PathBuf],
@@ -263,7 +377,37 @@ pub fn run_stacking(
     cancel: &Cancel,
     progress: &(dyn Fn(Progress) + Sync),
 ) -> Result<StackResult, PipelineError> {
+    let group = StackGroup {
+        lights,
+        calibration,
+        exposure: None,
+    };
+    run_stacking_groups(&[group], options, run, observer, cancel, progress)
+}
+
+/// The sessions are told apart only for calibration, the quality of their frames and the ground.
+/// The first group is the reference session: the lights are numbered group after group, the size
+/// of the result and the ground are those of that session.
+pub fn run_stacking_groups(
+    groups: &[StackGroup],
+    options: &StackOptions,
+    run: &RunOptions,
+    observer: Observer,
+    cancel: &Cancel,
+    progress: &(dyn Fn(Progress) + Sync),
+) -> Result<StackResult, PipelineError> {
+    let lights: Vec<PathBuf> = groups
+        .iter()
+        .flat_map(|group| group.lights.iter().cloned())
+        .collect();
+    let calibrations: Vec<Option<&CalibrationSet>> = groups
+        .iter()
+        .flat_map(|group| group.lights.iter().map(|_| group.calibration))
+        .collect();
+    let ranges = group_ranges(groups);
+    let (exposures, class_of_light) = exposure_classes(groups, &ranges, options.hdr);
     let first = lights.first().ok_or(PipelineError::NoInput)?;
+    check_same_sensor(groups, first)?;
     let info = stary_io::probe_file(first)?;
     let file_bytes = std::fs::metadata(first).map_or(0, |metadata| metadata.len());
     let (width, height) = (info.details.width as usize, info.details.height as usize);
@@ -296,8 +440,8 @@ pub fn run_stacking(
     let demosaicer = Demosaicer::open(first, options.quality, OutputColor::Camera)?;
     let color = demosaicer.color();
     let context = PrepareContext {
-        lights,
-        calibration,
+        lights: &lights,
+        calibrations: &calibrations,
         demosaicer: &demosaicer,
         decode: run.decode,
         detect: options.detect,
@@ -329,12 +473,17 @@ pub fn run_stacking(
         total: lights.len(),
     });
 
-    let reference_sky = prepared[registration.reference].sky;
+    let skies = class_skies(
+        &prepared,
+        &class_of_light,
+        exposures.len(),
+        registration.reference,
+    );
     let mut members = Vec::new();
     let mut skipped = Vec::new();
     let qualities: Vec<FrameQuality> = prepared.iter().map(quality::measure).collect();
     let poor = if options.skip_poor_frames {
-        quality::assess(&qualities, registration.reference)
+        assess_by_session(&qualities, &ranges, registration.reference)
     } else {
         vec![None; qualities.len()]
     };
@@ -365,7 +514,7 @@ pub fn run_stacking(
                 let frame = &mut prepared[index];
                 let reference = Prepared {
                     stars: Vec::new(),
-                    sky: reference_sky,
+                    sky: skies[class_of_light[index]],
                     planes: None,
                 };
                 members.push(Member {
@@ -373,6 +522,7 @@ pub fn run_stacking(
                     to_source,
                     matching: matching_for(frame, &reference, options.normalize),
                     planes: frame.planes.take(),
+                    with_ground: ranges[0].contains(&index),
                 });
             }
             Ok(None) => skipped.push(Skipped {
@@ -390,24 +540,32 @@ pub fn run_stacking(
         return Err(PipelineError::NotEnoughFrames);
     }
 
+    let frame_count = members.len() as u32;
+    let joined = !exposures.is_empty();
     let ground = options
         .masking
         .as_ref()
-        .filter(|masking| masking.separates_ground())
+        .filter(|masking| masking.separates_ground() && !joined)
         .map(|masking| &*masking.mask);
-    let image = if exact {
-        let setup = Integration {
-            width,
-            height,
-            ground,
-            kernel: options.kernel,
-            rejection: options.rejection,
-            strip_rows: plan.strip_rows,
-            workers,
-            context: &context,
+    let mut first_backend = Some(backend);
+    let mut integrate_members = |members: &[Member]| -> Result<LinearRgbF32, PipelineError> {
+        if exact {
+            let setup = Integration {
+                width,
+                height,
+                ground,
+                kernel: options.kernel,
+                rejection: options.rejection,
+                strip_rows: plan.strip_rows,
+                workers,
+                context: &context,
+            };
+            return integrate(members, &setup, cancel, progress);
+        }
+        let backend = match first_backend.take() {
+            Some(backend) => backend,
+            None => choose_backend(options.device, &shape, options.kernel, options.budget)?,
         };
-        integrate(&members, &setup, cancel, progress)?
-    } else {
         let clipping = match options.rejection {
             Rejection::Sigma { low, high } => Some(Clipping { low, high }),
             _ => None,
@@ -421,11 +579,36 @@ pub fn run_stacking(
             context: &context,
             ground,
         };
-        integrate_streaming(&members, &setup, backend, cancel, progress)?
+        integrate_streaming(members, &setup, backend, cancel, progress)
+    };
+    let image = if joined {
+        let mut layered: Option<(hdr::Layered, Exposure)> = None;
+        let mut by_class: Vec<Vec<Member>> = exposures.iter().map(|_| Vec::new()).collect();
+        for member in members {
+            by_class[class_of_light[member.index]].push(member);
+        }
+        for (exposure, of_class) in exposures.iter().zip(by_class) {
+            if of_class.is_empty() {
+                continue;
+            }
+            let stack = integrate_members(&of_class)?;
+            layered = Some(match layered {
+                None => (hdr::Layered::start(stack), *exposure),
+                Some((picture, base)) => (
+                    hdr::add_shorter(picture, &stack, base.ratio_to(*exposure)),
+                    base,
+                ),
+            });
+        }
+        layered
+            .map(|(picture, _)| picture.image)
+            .ok_or(PipelineError::NotEnoughFrames)?
+    } else {
+        integrate_members(&members)?
     };
     Ok(StackResult {
         image,
-        frames: members.len() as u32,
+        frames: frame_count,
         skipped,
         reference: registration.reference,
         reports,

@@ -14,6 +14,8 @@ pub enum PipelineError {
     NoInput,
     #[error("fewer than two frames could be aligned")]
     NotEnoughFrames,
+    #[error("{0}: the size or the pixel layout differs from the first light")]
+    OtherSensor(PathBuf),
     #[error("the sky of the mask has too few stars to align on")]
     NotEnoughSkyStars,
     #[error("{path}: {source}")]

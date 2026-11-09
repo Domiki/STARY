@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { ProbeInfo, Role } from '../../../ipc/types'
 import { createSession, placeInfo } from './placement'
+import { setRepresentative } from './representative'
 import { info } from './test-fixtures'
 import { warningsOf } from './warnings'
 import { type Session, type Workspace } from './workspace'
@@ -76,5 +77,42 @@ describe('warningsOf', () => {
       ['light', info({ path: '/l/2', format: 'tiff' })],
     ])
     expect(keysFor(session, '/l/2')).toContain('format_mixed')
+  })
+
+  describe('with another representative light', () => {
+    const sessionWith = (darkExposure: number): Session =>
+      buildSession([
+        ['light', info({ path: '/l/1', exposure_s: 30, format: 'fits' })],
+        ['light', info({ path: '/l/2', exposure_s: 60, format: 'tiff' })],
+        ['dark', info({ path: '/d/1', exposure_s: darkExposure })],
+      ])
+    const represent = (session: Session, path: string): Session =>
+      setRepresentative(
+        { sessions: [session], results: [], activeSessionId: session.id },
+        session.id,
+        path,
+      ).sessions[0]!
+
+    it('judges darks and lights against the first light by default', () => {
+      expect(keysFor(sessionWith(30), '/d/1')).not.toContain('exposure_differs')
+      expect(keysFor(sessionWith(60), '/d/1')).toContain('exposure_differs')
+      expect(keysFor(sessionWith(30), '/l/2')).toContain('exposure_differs')
+      expect(keysFor(sessionWith(30), '/l/1')).not.toContain('exposure_differs')
+    })
+
+    it('moves the warnings to the new representative', () => {
+      const thirty = represent(sessionWith(30), '/l/2')
+      expect(keysFor(thirty, '/d/1')).toContain('exposure_differs')
+      expect(keysFor(thirty, '/l/1')).toContain('exposure_differs')
+      expect(keysFor(thirty, '/l/2')).not.toContain('exposure_differs')
+      const sixty = represent(sessionWith(60), '/l/2')
+      expect(keysFor(sixty, '/d/1')).not.toContain('exposure_differs')
+    })
+
+    it('takes the format of the representative as the one of the session', () => {
+      const session = represent(sessionWith(30), '/l/2')
+      expect(keysFor(session, '/l/1')).toContain('format_mixed')
+      expect(keysFor(session, '/l/2')).not.toContain('format_mixed')
+    })
   })
 })

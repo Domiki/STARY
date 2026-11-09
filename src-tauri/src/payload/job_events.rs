@@ -124,6 +124,7 @@ fn failure_code(error: &PipelineError) -> &'static str {
         PipelineError::NoInput => "no_input",
         PipelineError::NotEnoughFrames => "not_enough_frames",
         PipelineError::NotEnoughSkyStars => "not_enough_sky_stars",
+        PipelineError::OtherSensor(_) => "other_sensor",
         PipelineError::Raw { .. } => "raw",
         PipelineError::Demosaic { .. } => "demosaic",
         PipelineError::File { .. } => "file",

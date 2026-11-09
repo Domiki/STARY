@@ -13,7 +13,8 @@ import { representativeOf } from '../file-list/model/representative'
 import { useFileListStore } from '../file-list/store'
 import { useMaskStore } from '../mask/store'
 import { readChoices } from './choices'
-import { activeSession, buildJobRequest } from './job-request'
+import { buildJobRequest } from './job-request'
+import { referenceSessionOf } from './reference-session'
 import { useOperationStore } from './store'
 
 /** Fewer stars than this in the sky and the frames cannot be aligned on it. */
@@ -70,7 +71,7 @@ export const useJobStore = create<JobState>((set, get) => ({
       if (request.masking) {
         const { session_id } = request.masking
         await useMaskStore.getState().publish(session_id)
-        const session = activeSession(workspace)
+        const session = referenceSessionOf(workspace, useOperationStore.getState().referenceSession)
         const representative = session && representativeOf(session)
         const stars =
           kind === 'stacking' && representative

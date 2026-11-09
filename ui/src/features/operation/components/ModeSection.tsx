@@ -10,7 +10,11 @@ import type {
 import { CollapsibleSection } from '../../../shared/CollapsibleSection'
 import { Toggle } from '../../../shared/Toggle'
 import { useFileListStore } from '../../file-list/store'
+import { sessionDisplayName } from '../../file-list/session-name'
+import { hasLights } from '../calibration-status'
 import { defaultOutputFolder } from '../output-folder'
+import { referenceSessionOf } from '../reference-session'
+import { useHdr } from '../useHdr'
 import { type Mode, useOperationStore } from '../store'
 import { FolderField } from './FolderField'
 
@@ -84,6 +88,7 @@ function NumberField(props: {
 
 function GroundOptions() {
   const { t } = useTranslation()
+  const hdr = useHdr()
   const { groundMasking, groundSeparate, setGroundMasking, setGroundSeparate } = useOperationStore()
   return (
     <div>
@@ -95,8 +100,8 @@ function GroundOptions() {
       <div className="pl-4">
         <Toggle
           label={t('operation.mode.groundStack')}
-          checked={groundMasking && groundSeparate}
-          disabled={!groundMasking}
+          checked={groundMasking && groundSeparate && !hdr.active}
+          disabled={!groundMasking || hdr.active}
           onChange={setGroundSeparate}
         />
       </div>
@@ -145,11 +150,24 @@ function TrailsOptions() {
 
 function StackingOptions() {
   const { t } = useTranslation()
-  const { stacking, setStacking } = useOperationStore()
+  const { stacking, setStacking, referenceSession, setReferenceSession, setHdr } =
+    useOperationStore()
+  const hdr = useHdr()
+  const workspace = useFileListStore((state) => state.workspace)
+  const reference = referenceSessionOf(workspace, referenceSession)
+  const sessions = workspace.sessions.flatMap((session, index) =>
+    hasLights(session) ? [{ value: session.id, label: sessionDisplayName(session, index, t) }] : [],
+  )
   const labelled = <T extends string>(group: string, values: T[]) =>
     values.map((value) => ({ value, label: t(`operation.mode.${group}.${value}`) }))
   return (
     <>
+      <SelectField
+        label={t('operation.mode.reference')}
+        value={reference?.id}
+        onChange={setReferenceSession}
+        options={sessions}
+      />
       <SelectField
         label={t('operation.mode.alignModel')}
         value={stacking.model}
@@ -182,6 +200,12 @@ function StackingOptions() {
           />
         </div>
       )}
+      <Toggle
+        label={t('operation.mode.hdr')}
+        checked={hdr.active}
+        disabled={!hdr.available}
+        onChange={setHdr}
+      />
       <Toggle
         label={t('operation.mode.skipPoorFrames')}
         checked={stacking.skip_poor_frames}

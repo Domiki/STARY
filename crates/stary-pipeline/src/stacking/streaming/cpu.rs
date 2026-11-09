@@ -195,7 +195,7 @@ impl Layers for CpuLayers<'_> {
     fn lay(&mut self, member: &Member, planes: &Planes, lay: Lay) -> Result<(), PipelineError> {
         lay_moved(&mut self.scratch, planes, member, self.setup);
         self.add(LayerKind::Sky, lay);
-        if self.ground.is_some() {
+        if self.ground.is_some() && member.with_ground {
             lay_unmoved(&mut self.scratch, planes);
             self.add(LayerKind::Ground, lay);
         }

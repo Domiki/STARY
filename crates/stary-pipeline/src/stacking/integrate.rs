@@ -24,6 +24,8 @@ pub struct Member {
     pub to_source: Transform,
     pub matching: [Matching; COLORS],
     pub planes: Option<Planes>,
+    /// Whether the frame goes into the picture of the ground (that of the reference session).
+    pub with_ground: bool,
 }
 
 pub struct Integration<'a> {
@@ -137,7 +139,7 @@ struct Layers {
 impl Layers {
     fn add(&mut self, position: usize, member: &Member, planes: &Planes, kernel: Kernel) {
         self.sky.fill(position, member, planes, kernel);
-        if let Some(ground) = &mut self.ground {
+        if let (Some(ground), true) = (&mut self.ground, member.with_ground) {
             ground.fill_unmoved(position, planes);
         }
     }

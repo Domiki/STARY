@@ -169,6 +169,8 @@ export interface JobRequest {
   dark: JobSlot
   dark_flat: JobSlot
   flat: JobSlot
+  /** The other sessions stacked with this one, which is the reference session. */
+  more_sessions: SessionRequest[]
   apply_calibration: boolean
   masters_folder: string | null
   calibrated_folder: string | null
@@ -179,7 +181,16 @@ export interface JobRequest {
   memory_percent: number
   device: ComputeDevice
   read: ReadMode
+  hdr: boolean
   masking: MaskingRequest | null
+}
+
+export interface SessionRequest {
+  lights: string[]
+  bias: JobSlot
+  dark: JobSlot
+  dark_flat: JobSlot
+  flat: JobSlot
 }
 
 export type JobStage =

@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use serde::Deserialize;
 use stary_pipeline::{
     CalSource, Combine, Device, Ground, JobKind, JobSpec, Masking, ReadMode, Reference,
-    StackSettings, TrailsMethod,
+    SessionInput, StackSettings, TrailsMethod,
 };
 use stary_raw::DemosaicQuality;
 use stary_register::Model;
@@ -187,6 +187,28 @@ pub struct MaskingWire {
     pub ground: GroundWire,
 }
 
+/// A session stacked together with the one of the request (the reference session).
+#[derive(Debug, Deserialize)]
+pub struct SessionWire {
+    pub lights: Vec<String>,
+    pub bias: SlotWire,
+    pub dark: SlotWire,
+    pub dark_flat: SlotWire,
+    pub flat: SlotWire,
+}
+
+impl From<SessionWire> for SessionInput {
+    fn from(wire: SessionWire) -> Self {
+        Self {
+            lights: paths(wire.lights),
+            bias: slot(wire.bias),
+            dark: slot(wire.dark),
+            dark_flat: slot(wire.dark_flat),
+            flat: slot(wire.flat),
+        }
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct JobRequest {
     pub kind: KindWire,
@@ -195,6 +217,8 @@ pub struct JobRequest {
     pub dark: SlotWire,
     pub dark_flat: SlotWire,
     pub flat: SlotWire,
+    #[serde(default)]
+    pub more_sessions: Vec<SessionWire>,
     pub apply_calibration: bool,
     pub masters_folder: Option<String>,
     pub calibrated_folder: Option<String>,
@@ -209,6 +233,8 @@ pub struct JobRequest {
     pub read: ReadWire,
     #[serde(default)]
     pub masking: Option<MaskingWire>,
+    #[serde(default)]
+    pub hdr: bool,
 }
 
 fn paths(values: Vec<String>) -> Vec<PathBuf> {
@@ -254,6 +280,7 @@ impl JobRequest {
             dark: slot(self.dark),
             dark_flat: slot(self.dark_flat),
             flat: slot(self.flat),
+            more_sessions: self.more_sessions.into_iter().map(Into::into).collect(),
             apply_calibration: self.apply_calibration,
             masters_folder: self.masters_folder.map(PathBuf::from),
             calibrated_folder: self.calibrated_folder.map(PathBuf::from),
@@ -268,6 +295,7 @@ impl JobRequest {
             masking,
             device: self.device.into(),
             read: self.read.into(),
+            hdr: self.hdr,
         })
     }
 }

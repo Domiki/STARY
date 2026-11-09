@@ -18,6 +18,12 @@ import {
   lightCount,
 } from './calibration-status'
 import { defaultOutputFolder } from './output-folder'
+import {
+  activeSession,
+  joinableExposures,
+  otherSessionsToStack,
+  referenceSessionOf,
+} from './reference-session'
 import type { Mode } from './store'
 
 export interface GroundChoices {
@@ -39,6 +45,10 @@ export interface OperationChoices {
   device: ComputeDevice
   read: ReadMode
   ground: GroundChoices
+  /** The session the stacks line up on; `null` is the active one. */
+  referenceSession: string | null
+  /** Stack the exposures apart and join them (when the sessions hold more than one). */
+  hdr: boolean
 }
 
 const MIN_STACK_FRAMES = 2
@@ -63,8 +73,16 @@ export const referenceIndexOf = (session: Session): number => {
   return Math.max(index, 0)
 }
 
-export const activeSession = (workspace: Workspace): Session | undefined =>
-  workspace.sessions.find(({ id }) => id === workspace.activeSessionId)
+export { activeSession }
+
+const stackedLights = (workspace: Workspace, choices: OperationChoices) => {
+  const reference = referenceSessionOf(workspace, choices.referenceSession)
+  if (!reference) return 0
+  return [reference, ...otherSessionsToStack(workspace, reference)].reduce(
+    (total, session) => total + lightCount(session),
+    0,
+  )
+}
 
 export function canRun(kind: JobKind, mode: Mode, workspace: Workspace, choices: OperationChoices) {
   const session = activeSession(workspace)
@@ -73,11 +91,20 @@ export function canRun(kind: JobKind, mode: Mode, workspace: Workspace, choices:
     const needed = choices.trails.method === 'gap_filling' ? MIN_STACK_FRAMES : 1
     return mode === 'trails' && hasLights(session) && lightCount(session) >= needed
   }
-  if (kind === 'stacking') return mode === 'stacking' && lightCount(session) >= MIN_STACK_FRAMES
+  if (kind === 'stacking') {
+    return mode === 'stacking' && stackedLights(workspace, choices) >= MIN_STACK_FRAMES
+  }
   const savesMasters = choices.saveMasters && hasFramesToIntegrate(session)
   const savesLights = choices.saveCalibrated && hasCalibrationData(session) && hasLights(session)
   return savesMasters || savesLights
 }
+
+const slotsOf = (session: Session): Record<Exclude<Role, 'light'>, JobSlot> => ({
+  bias: toJobSlot(session.slots.bias),
+  dark: toJobSlot(session.slots.dark),
+  dark_flat: toJobSlot(session.slots.dark_flat),
+  flat: toJobSlot(session.slots.flat),
+})
 
 /** Turns what is on screen into the request the backend runs. Returns null when there is nothing to do. */
 export function buildJobRequest(
@@ -86,21 +113,25 @@ export function buildJobRequest(
   workspace: Workspace,
   choices: OperationChoices,
 ): JobRequest | null {
-  const session = activeSession(workspace)
+  const stacking = kind === 'stacking'
+  const session = stacking
+    ? referenceSessionOf(workspace, choices.referenceSession)
+    : activeSession(workspace)
   if (!session || !canRun(kind, mode, workspace, choices)) return null
-  const slots: Record<Exclude<Role, 'light'>, JobSlot> = {
-    bias: toJobSlot(session.slots.bias),
-    dark: toJobSlot(session.slots.dark),
-    dark_flat: toJobSlot(session.slots.dark_flat),
-    flat: toJobSlot(session.slots.flat),
-  }
-  const savesMasters = choices.saveMasters && hasFramesToIntegrate(session)
-  const savesCalibrated = choices.saveCalibrated && hasCalibrationData(session)
+  const others = stacking ? otherSessionsToStack(workspace, session) : []
+  const sessions = [session, ...others]
+  const hdr = stacking && choices.hdr && joinableExposures(sessions)
+  const savesMasters = choices.saveMasters && sessions.some(hasFramesToIntegrate)
+  const savesCalibrated = choices.saveCalibrated && sessions.some(hasCalibrationData)
   return {
     kind,
     lights: pathsOf(slotItems(session.slots.light)),
-    ...slots,
-    apply_calibration: choices.applyCalibration && hasCalibrationData(session),
+    ...slotsOf(session),
+    more_sessions: others.map((other) => ({
+      lights: pathsOf(slotItems(other.slots.light)),
+      ...slotsOf(other),
+    })),
+    apply_calibration: choices.applyCalibration && sessions.some(hasCalibrationData),
     masters_folder: savesMasters
       ? (choices.folders.master ?? defaultOutputFolder(workspace, 'master'))
       : null,
@@ -114,11 +145,12 @@ export function buildJobRequest(
     memory_percent: choices.memoryPercent,
     device: choices.device,
     read: choices.read,
+    hdr,
     masking:
       kind !== 'calibration' && choices.ground.masking
         ? {
             session_id: session.id,
-            ground: choices.ground.separate ? 'separate' : 'with_sky',
+            ground: choices.ground.separate && !hdr ? 'separate' : 'with_sky',
           }
         : null,
   }

@@ -38,7 +38,7 @@ impl Layers for GpuLayers {
             pass,
             &Placement::moved(member.to_source, member.matching),
         )?;
-        if self.ground {
+        if self.ground && member.with_ground {
             self.stack.lay(GROUND, pass, &Placement::unmoved())?;
         }
         Ok(())

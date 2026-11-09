@@ -1,4 +1,5 @@
 import type { ProbeInfo, Role } from '../../../ipc/types'
+import { representativeOf } from './representative'
 import { type Session, slotItems } from './workspace'
 
 export type WarningKey = 'exposure_differs' | 'iso_differs' | 'format_mixed' | 'low_accuracy'
@@ -47,8 +48,8 @@ function warningsForItem(
   item: ProbeInfo,
   isMaster: boolean,
 ): ItemWarning[] {
-  const slotFirst = slotItems(session.slots[role])[0]
-  const light = slotItems(session.slots.light)[0]
+  const light = representativeOf(session) ?? undefined
+  const slotFirst = role === 'light' ? light : slotItems(session.slots[role])[0]
   const flat = slotItems(session.slots.flat)[0]
   const sessionFirst = light ?? flat ?? slotFirst
   const withinSlot =

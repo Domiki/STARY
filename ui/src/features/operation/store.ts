@@ -18,6 +18,9 @@ interface OperationState {
   quality: DemosaicQuality
   trails: TrailsRequest
   stacking: StackingChoices
+  /** The session the stacks line up on; `null` is the active one. */
+  referenceSession: string | null
+  hdr: boolean
   groundMasking: boolean
   groundSeparate: boolean
   setMode: (mode: Mode) => void
@@ -28,6 +31,8 @@ interface OperationState {
   setQuality: (quality: DemosaicQuality) => void
   setTrails: (change: Partial<TrailsRequest>) => void
   setStacking: (change: Partial<StackingChoices>) => void
+  setReferenceSession: (sessionId: string | null) => void
+  setHdr: (on: boolean) => void
   setGroundMasking: (on: boolean) => void
   setGroundSeparate: (on: boolean) => void
 }
@@ -52,6 +57,8 @@ export const useOperationStore = create<OperationState>((set) => ({
   quality: 'fast',
   trails: DEFAULT_TRAILS,
   stacking: DEFAULT_STACKING,
+  referenceSession: null,
+  hdr: false,
   groundMasking: false,
   groundSeparate: false,
   setMode: (mode) => set({ mode }),
@@ -61,6 +68,8 @@ export const useOperationStore = create<OperationState>((set) => ({
   setQuality: (quality) => set({ quality }),
   setTrails: (change) => set((state) => ({ trails: { ...state.trails, ...change } })),
   setStacking: (change) => set((state) => ({ stacking: { ...state.stacking, ...change } })),
+  setReferenceSession: (referenceSession) => set({ referenceSession }),
+  setHdr: (hdr) => set({ hdr }),
   setGroundMasking: (groundMasking) => set({ groundMasking }),
   setGroundSeparate: (groundSeparate) => set({ groundSeparate }),
   setFolder: (kind, folder) =>

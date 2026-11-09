@@ -1,8 +1,10 @@
+import { getVersion } from '@tauri-apps/api/app'
 import { invoke } from '@tauri-apps/api/core'
 import { listen } from '@tauri-apps/api/event'
 import { getCurrentWebview } from '@tauri-apps/api/webview'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { open, save } from '@tauri-apps/plugin-dialog'
+import { openUrl } from '@tauri-apps/plugin-opener'
 
 import { type Point, detectPlatform, dropPointToCss } from './drop-point'
 import { parseImagePacket, parsePacket } from './image-packet'
@@ -14,6 +16,7 @@ import type {
   JobProgress,
   JobRequest,
   LaunchContext,
+  NewerRelease,
   ProbeOutcome,
   SaveAsRequest,
   SkyDetection,
@@ -27,6 +30,31 @@ export const expandPaths = (paths: string[]) => invoke<string[]>('expand_paths',
 export const probeFiles = (paths: string[]) => invoke<ProbeOutcome[]>('probe_files', { paths })
 
 export const launchContext = () => invoke<LaunchContext>('launch_context')
+
+export interface MenuLabels {
+  help: string
+  about: string
+  report_issue: string
+  documentation: string
+}
+
+/** Puts the words of the menu bar of the window in the language of the screen. */
+export const setMenuText = (labels: MenuLabels) => invoke<void>('set_menu_text', { labels })
+
+export type MenuAction = 'about' | 'report_issue' | 'documentation'
+
+/** Calls `handler` when an entry of the menu bar of the window is chosen. */
+export const listenForMenu = (handler: (action: MenuAction) => void) =>
+  listen<MenuAction>('menu-action', (event) => handler(event.payload))
+
+export const appVersion = () => getVersion()
+
+/** Opens an address in the browser of the system. */
+export const openExternal = (url: string) => openUrl(url)
+
+/** The newest release on GitHub that is newer than `current`; `null` when there is none. */
+export const checkUpdate = (current: string) =>
+  invoke<NewerRelease | null>('check_update', { current })
 
 export const gpuInfo = () => invoke<GpuInfo | null>('gpu_info')
 

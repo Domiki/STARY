@@ -37,14 +37,8 @@ export const WarningIcon = (props: SVGProps<SVGSVGElement>) => (
 
 export const GearIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...base} {...props}>
-    <circle cx="8" cy="8" r="2.2" />
-    <path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M12.6 3.4l-1.4 1.4M4.8 11.2l-1.4 1.4" />
-  </svg>
-)
-
-export const StarIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg {...base} {...props} fill="currentColor" stroke="none">
-    <path d="M8 1 9.3 6.7 15 8 9.3 9.3 8 15 6.7 9.3 1 8 6.7 6.7 8 1Z" />
+    <path d="M7.11 3.18 L7.22 1.14 L8.78 1.14 L8.89 3.18 L10.78 3.96 L12.30 2.60 L13.40 3.70 L12.04 5.22 L12.82 7.11 L14.86 7.22 L14.86 8.78 L12.82 8.89 L12.04 10.78 L13.40 12.30 L12.30 13.40 L10.78 12.04 L8.89 12.82 L8.78 14.86 L7.22 14.86 L7.11 12.82 L5.22 12.04 L3.70 13.40 L2.60 12.30 L3.96 10.78 L3.18 8.89 L1.14 8.78 L1.14 7.22 L3.18 7.11 L3.96 5.22 L2.60 3.70 L3.70 2.60 L5.22 3.96Z" />
+    <circle cx="8" cy="8" r="2" />
   </svg>
 )
 

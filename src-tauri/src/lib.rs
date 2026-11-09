@@ -1,15 +1,18 @@
 #[global_allocator]
 static ALLOCATOR: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+mod app_menu;
 mod commands;
 mod jobs;
 mod launch_args;
 mod mask_store;
 mod payload;
 mod sky_cache;
+mod update;
 
 use commands::{
-    app_cmd, device_cmd, export_cmd, files_cmd, jobs_cmd, launch_cmd, mask_cmd, sky_cmd,
+    app_cmd, device_cmd, export_cmd, files_cmd, jobs_cmd, launch_cmd, mask_cmd, menu_cmd, sky_cmd,
+    update_cmd,
 };
 use launch_args::LaunchContext;
 use tauri::{Emitter, Manager, RunEvent, WindowEvent};
@@ -25,10 +28,16 @@ fn job_is_running(app: &tauri::AppHandle) -> bool {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_opener::init())
         .manage(LaunchContext::from_args(std::env::args().skip(1)))
         .manage(jobs::JobRegistry::default())
         .manage(mask_store::MaskStore::default())
         .manage(sky_cache::SkyCache::default())
+        .setup(|app| {
+            app_menu::install(app.handle())?;
+            Ok(())
+        })
+        .on_menu_event(app_menu::on_event)
         .on_window_event(|window, event| {
             if let WindowEvent::CloseRequested { api, .. } = event
                 && job_is_running(window.app_handle())
@@ -50,6 +59,8 @@ pub fn run() {
             mask_cmd::clear_mask,
             export_cmd::save_result_as,
             app_cmd::quit_app,
+            update_cmd::check_update,
+            menu_cmd::set_menu_text,
             jobs_cmd::start_job,
             jobs_cmd::cancel_job,
         ])

@@ -9,6 +9,7 @@ import { placeInfo } from '../../file-list/model/placement'
 import { info } from '../../file-list/model/test-fixtures'
 import { type Workspace, emptyWorkspace } from '../../file-list/model/workspace'
 import { useFileListStore } from '../../file-list/store'
+import { SettingsDialog } from '../../settings/components/SettingsDialog'
 import { useMaskStore } from '../../mask/store'
 import { useSettingsStore } from '../../settings/store'
 import { useJobStore } from '../job-store'
@@ -367,24 +368,35 @@ describe('while files are being added', () => {
 })
 
 describe('general and calibration options', () => {
-  it('lets the device be chosen but not a GPU that was not found', async () => {
-    render(<OperationPanel />)
-    await screen.findByText('GPU: none was found')
+  it('lets the device be chosen in the settings, but not a GPU that was not found', async () => {
+    await useSettingsStore.getState().detectGpu()
+    useSettingsStore.setState({ dialogOpen: true })
+    render(<SettingsDialog />)
+    expect(screen.getByText('GPU: none was found')).toBeTruthy()
     expect((screen.getByRole('radio', { name: 'GPU' }) as HTMLButtonElement).disabled).toBe(true)
     expect(useSettingsStore.getState().device).toBe('cpu')
   })
 
-  it('offers the GPU that was found', async () => {
+  it('offers the GPU that was found, chosen from the start', async () => {
     vi.mocked(gpuInfo).mockResolvedValue({ name: 'Test GPU', backend: 'Metal', shares_memory: true })
-    render(<OperationPanel />)
-    await screen.findByText('GPU: Test GPU (Metal)')
+    await useSettingsStore.getState().detectGpu()
+    expect(useSettingsStore.getState().device).toBe('gpu')
+    useSettingsStore.setState({ dialogOpen: true })
+    render(<SettingsDialog />)
+    expect(screen.getByText('GPU: Test GPU (Metal)')).toBeTruthy()
     const gpu = screen.getByRole('radio', { name: 'GPU' }) as HTMLButtonElement
     expect(gpu.disabled).toBe(false)
-    await waitFor(() => expect(useSettingsStore.getState().device).toBe('gpu'))
     fireEvent.click(screen.getByRole('radio', { name: 'CPU' }))
     expect(useSettingsStore.getState().device).toBe('cpu')
     fireEvent.click(gpu)
     expect(useSettingsStore.getState().device).toBe('gpu')
+  })
+
+  it('has no General section in the operation panel any more', () => {
+    render(<OperationPanel />)
+    expect(screen.queryByText('General')).toBeNull()
+    expect(screen.queryByRole('radio', { name: 'GPU' })).toBeNull()
+    expect(screen.queryByRole('slider')).toBeNull()
   })
 
   it('chooses how the frames of the masters are read', () => {
@@ -395,8 +407,10 @@ describe('general and calibration options', () => {
     expect(useSettingsStore.getState().readMode).toBe('fast')
   })
 
-  it('changes the memory budget', () => {
-    render(<OperationPanel />)
+
+  it('changes the memory budget in the settings', () => {
+    useSettingsStore.setState({ dialogOpen: true })
+    render(<SettingsDialog />)
     const slider = screen.getByRole('slider')
     act(() => void fireEvent.change(slider, { target: { value: '65' } }))
     expect(useSettingsStore.getState().memoryPercent).toBe(65)

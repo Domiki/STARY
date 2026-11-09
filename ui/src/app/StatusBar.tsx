@@ -43,7 +43,7 @@ export function StatusBar() {
         <span>{message}</span>
       )}
       <span className="flex gap-4">
-        <span>{t('status.device', { device: t(`operation.general.device.${device}`) })}</span>
+        <span>{t('status.device', { device: t(`settings.device.${device}`) })}</span>
         <span>{t('status.items', { count })}</span>
       </span>
     </footer>

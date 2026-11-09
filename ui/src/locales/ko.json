@@ -102,19 +102,6 @@
     "pickFolder": "폴더 선택",
     "changeFolder": "변경…",
     "defaultFolder": "기본",
-      "general": {
-        "title": "일반",
-        "device": {
-          "title": "연산 장치",
-          "cpu": "CPU",
-          "gpu": "GPU",
-          "cpuInfo": "CPU: 스레드 {{count}}개",
-          "gpuInfo": "GPU: {{name}} ({{backend}})",
-          "gpuChecking": "GPU: 찾는 중…",
-          "gpuUnavailable": "GPU: 찾지 못했습니다"
-        },
-        "memory": "메모리 예산"
-      },
     "calibration": {
       "read": {
         "title": "파일 읽기",
@@ -181,7 +168,23 @@
     "title": "설정",
     "language": "언어",
     "systemDefault": "시스템 언어",
-    "close": "닫기"
+    "close": "닫기",
+    "updates": {
+      "title": "업데이트",
+      "check": "시작할 때 새 버전 확인"
+    },
+    "device": {
+      "title": "연산 장치",
+      "cpu": "CPU",
+      "gpu": "GPU",
+      "cpuInfo": "CPU: 스레드 {{count}}개",
+      "gpuInfo": "GPU: {{name}} ({{backend}})",
+      "gpuChecking": "GPU: 찾는 중…",
+      "gpuUnavailable": "GPU: 찾지 못했습니다"
+    },
+    "memory": {
+      "title": "메모리 예산"
+    }
   },
   "status": {
     "scanning": "파일을 찾는 중…",
@@ -336,5 +339,37 @@
     "message": "지금 종료하면 작업이 중단되고 결과가 만들어지지 않습니다. 그래도 종료할까요?",
     "quit": "종료",
     "stay": "계속 실행"
+  },
+  "help": {
+    "title": "도움말",
+    "about": "STARY 정보",
+    "reportIssue": "문제 보고",
+    "documentation": "문서"
+  },
+  "about": {
+    "title": "STARY 정보",
+    "close": "닫기",
+    "version": "버전 {{version}} (프리릴리스)",
+    "description": "STARY는 하룻밤의 사진을 한 장의 하늘 이미지로 모아 줍니다. 딥스카이 스태킹, 별 궤적, 지면 마스킹을 하고, 무거운 계산은 GPU가 맡습니다.",
+    "developer": "개발자",
+    "links": "링크",
+    "website": "웹사이트",
+    "documentation": "문서",
+    "repository": "GitHub 소스 코드",
+    "support": "커피 한 잔 사 주기",
+    "license": "라이선스",
+    "thirdParty": "STARY는 오픈소스 소프트웨어 위에 만들어졌습니다. 글꼴 SUIT는 SIL Open Font License 1.1을, LibRaw는 CDDL을 따릅니다.",
+    "checkUpdates": "업데이트 확인",
+    "checking": "새 버전을 찾는 중…",
+    "upToDate": "최신 버전을 쓰고 있습니다.",
+    "checkFailed": "업데이트를 확인하지 못했습니다."
+  },
+  "update": {
+    "title": "새 버전이 있습니다",
+    "message": "STARY {{next}} 버전이 나왔습니다. 지금 버전은 {{current}}입니다.",
+    "notes": "릴리스 노트",
+    "noNotes": "릴리스 노트가 없습니다.",
+    "close": "닫기",
+    "download": "다운로드하러 가기"
   }
 }

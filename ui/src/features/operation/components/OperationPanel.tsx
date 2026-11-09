@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useFileListStore } from '../../file-list/store'
 import { useJobStore } from '../job-store'
 import { CalibrationSection } from './CalibrationSection'
-import { GeneralSection } from './GeneralSection'
 import { ModeSection } from './ModeSection'
 import { RunBar } from './RunBar'
 
@@ -24,7 +23,6 @@ export function OperationPanel() {
         className={`flex min-h-0 flex-1 flex-col transition-opacity ${locked ? 'opacity-50' : ''}`}
       >
         <div className="min-h-0 flex-1 overflow-auto">
-          <GeneralSection />
           <CalibrationSection />
           <ModeSection />
         </div>

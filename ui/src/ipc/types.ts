@@ -240,3 +240,13 @@ export type JobFinished =
     }
   | { status: 'cancelled' }
   | { status: 'error'; failure: { code: string; message: string } }
+
+/** A release on GitHub that is newer than the running program. */
+export interface NewerRelease {
+  version: string
+  name: string
+  notes: string
+  url: string
+  published: string | null
+  prerelease: boolean
+}

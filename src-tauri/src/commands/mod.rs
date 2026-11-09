@@ -5,4 +5,6 @@ pub mod files_cmd;
 pub mod jobs_cmd;
 pub mod launch_cmd;
 pub mod mask_cmd;
+pub mod menu_cmd;
 pub mod sky_cmd;
+pub mod update_cmd;

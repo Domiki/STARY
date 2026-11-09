@@ -102,19 +102,6 @@
     "pickFolder": "Choose a folder",
     "changeFolder": "Change…",
     "defaultFolder": "default",
-      "general": {
-        "title": "General",
-        "device": {
-          "title": "Compute device",
-          "cpu": "CPU",
-          "gpu": "GPU",
-          "cpuInfo": "CPU: {{count}} threads",
-          "gpuInfo": "GPU: {{name}} ({{backend}})",
-          "gpuChecking": "GPU: looking…",
-          "gpuUnavailable": "GPU: none was found"
-        },
-        "memory": "Memory budget"
-      },
     "calibration": {
       "read": {
         "title": "File reading",
@@ -181,7 +168,23 @@
     "title": "Settings",
     "language": "Language",
     "systemDefault": "System default",
-    "close": "Close"
+    "close": "Close",
+    "updates": {
+      "title": "Updates",
+      "check": "Look for a new version at startup"
+    },
+    "device": {
+      "title": "Compute device",
+      "cpu": "CPU",
+      "gpu": "GPU",
+      "cpuInfo": "CPU: {{count}} threads",
+      "gpuInfo": "GPU: {{name}} ({{backend}})",
+      "gpuChecking": "GPU: looking…",
+      "gpuUnavailable": "GPU: none was found"
+    },
+    "memory": {
+      "title": "Memory budget"
+    }
   },
   "status": {
     "scanning": "Looking for files…",
@@ -336,5 +339,37 @@
     "message": "Closing now stops it and its result is lost. Close anyway?",
     "quit": "Close",
     "stay": "Keep running"
+  },
+  "help": {
+    "title": "Help",
+    "about": "About STARY",
+    "reportIssue": "Report an issue",
+    "documentation": "Documentation"
+  },
+  "about": {
+    "title": "About STARY",
+    "close": "Close",
+    "version": "Version {{version}} (pre-release)",
+    "description": "STARY brings a night of photographs together into one picture of the sky: deep-sky stacking, star trails and ground masking, with the heavy lifting done on your GPU.",
+    "developer": "Developer",
+    "links": "Links",
+    "website": "Website",
+    "documentation": "Documentation",
+    "repository": "Source code on GitHub",
+    "support": "Buy me a coffee",
+    "license": "License",
+    "thirdParty": "STARY builds on open-source software. The typeface SUIT is under the SIL Open Font License 1.1, and LibRaw is used under the CDDL.",
+    "checkUpdates": "Check for updates",
+    "checking": "Looking for a new version…",
+    "upToDate": "You have the newest version.",
+    "checkFailed": "Could not look for updates."
+  },
+  "update": {
+    "title": "A new version is available",
+    "message": "STARY {{next}} is available. You have {{current}}.",
+    "notes": "Release notes",
+    "noNotes": "There are no release notes.",
+    "close": "Close",
+    "download": "Go to the download"
   }
 }

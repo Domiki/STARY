@@ -17,3 +17,6 @@ __pycache__/
 
 # Built manual (mkdocs build)
 _build/
+
+# Editor
+.vscode/

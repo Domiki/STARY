@@ -48,7 +48,9 @@ Pre-release builds are not signed with a paid developer certificate, so the syst
 
 - **macOS** — right-click the app and choose **Open** (or *System Settings → Privacy & Security → Open Anyway*).
   If it says the app is damaged, run `xattr -cr /Applications/STARY.app`.
-- **Windows** — in SmartScreen choose **More info → Run anyway**.
+- **Windows** — in SmartScreen choose **More info → Run anyway**. If Microsoft Defender blocks the file, open
+  *Windows Security → Virus & threat protection → Protection history* and choose **Allow on device**.
+  See the [code signing policy](https://domiki.github.io/STARY/code-signing.html).
 
 ## Quick start
 
@@ -118,9 +120,9 @@ If STARY is useful to you, you can support its development:
 
 ## License
 
-STARY is released under the [MIT License](LICENSE).
+STARY is released under the [MIT License](LICENSE). The typeface is under its own license; see [NOTICE](NOTICE).
 
-Made by Dohyeok Ahn ([Domiki](https://github.com/Domiki), <ado505050@gmail.com>).
+Made by [Domiki](https://github.com/Domiki) (<ado505050@gmail.com>).
 
 It builds on [Tauri](https://tauri.app), [React](https://react.dev), [Rust](https://www.rust-lang.org),
 [LibRaw](https://www.libraw.org) (used under the CDDL), [wgpu](https://wgpu.rs) and other open-source projects.

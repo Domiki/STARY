@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Code signing policy — STARY</title>
+  <meta name="description" content="How the STARY installers are signed, who signs them and what the program sends over the network." />
+  <meta name="theme-color" content="#0b111b" />
+  <meta property="og:title" content="Code signing policy — STARY" />
+  <meta property="og:description" content="How the STARY installers are signed, who signs them and what the program sends over the network." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="STARY" />
+  <meta property="og:url" content="https://domiki.github.io/STARY/code-signing.html" />
+  <meta property="og:image" content="https://domiki.github.io/STARY/assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" href="assets/img/icon.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="STARY home"><img class="brand-icon" src="assets/img/icon.png" alt="" /><img class="wordmark" src="assets/img/logo-wordmark.png" alt="STARY" /></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="download.html">Download</a>
+        <a href="news.html">News</a>
+        <a href="https://stary.readthedocs.io/" class="external" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="https://github.com/Domiki/STARY" class="external" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="page-head">
+        <span class="eyebrow">Trust</span>
+        <h1>Code signing policy</h1>
+        <p>How the Windows installers of STARY are signed, who is responsible, and what the program sends over the network.</p>
+      </div>
+
+      <section>
+        <h2>Signing</h2>
+        <p>Free code signing for the Windows installers is provided by <a href="https://signpath.io" rel="noopener">SignPath.io</a>, with a certificate from the <a href="https://signpath.org" rel="noopener">SignPath Foundation</a>. Only installers built from the public source code in <a href="https://github.com/Domiki/STARY" rel="noopener">the repository</a> by its GitHub Actions workflow are signed, and every release is approved by hand before it is signed.</p>
+        <p class="muted">Until the signing is set up, the installers are not signed and Windows may show a warning. See <a href="download.html#first-open">Download</a>.</p>
+      </section>
+
+      <section style="padding-top:24px">
+        <h2>Team roles</h2>
+        <table>
+          <tr><th>Authors</th><td><a href="https://github.com/Domiki" rel="noopener">Domiki</a></td></tr>
+          <tr><th>Reviewers</th><td>Domiki</td></tr>
+          <tr><th>Approvers</th><td>Domiki</td></tr>
+        </table>
+        <p class="muted">STARY is developed by one person, who holds all three roles.</p>
+      </section>
+
+      <section style="padding-top:24px">
+        <h2>Privacy</h2>
+        <p>STARY works on your own computer. Your photographs are never uploaded, and the program collects no personal data, usage statistics or crash reports.</p>
+        <p>The only network request the program makes is a check for a newer version when it starts: it asks the GitHub releases list of this project (<code>api.github.com</code>) and sends only the usual parts of such a request, such as your IP address and the name and version of the program. You can turn it off in <em>Settings</em> by switching off <em>Check for updates</em>. Nothing is downloaded or installed by it; it only tells you that a newer version exists.</p>
+      </section>
+
+      <section style="padding-top:24px">
+        <h2>Installing and removing</h2>
+        <p>The installer does not change your system settings beyond installing the program. To remove STARY on Windows, use <em>Settings → Apps → Installed apps</em> and choose <em>Uninstall</em> for STARY.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong><img class="wordmark small" src="assets/img/logo-wordmark.png" alt="STARY" /></strong> — stacking for night-sky photographs.<br />
+        Released under the <a href="https://github.com/Domiki/STARY/blob/main/LICENSE">MIT License</a>.
+      </div>
+      <div class="footer-links">
+        <a href="download.html">Download</a>
+        <a href="https://stary.readthedocs.io/" rel="noopener">Documentation</a>
+        <a href="faq.html">FAQ</a>
+        <a href="code-signing.html">Code signing policy</a>
+        <a href="https://github.com/Domiki/STARY/issues" rel="noopener">Report an issue</a>
+        <a href="https://github.com/Domiki/STARY" rel="noopener">GitHub</a>
+        <a href="https://buymeacoffee.com/domiki" rel="noopener">Buy me a coffee</a>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

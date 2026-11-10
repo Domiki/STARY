@@ -66,14 +66,14 @@
         </table>
       </section>
 
-      <section style="padding-top:24px">
+      <section id="first-open" style="padding-top:24px">
         <h2>The first time you open it</h2>
         <p class="muted">The pre-release builds are not signed by a paid developer account, so your system shows a warning once.</p>
         <h3 style="margin-top:22px">macOS</h3>
         <p>Open the .dmg and drag STARY to Applications. If macOS refuses to open it, right-click the app and choose <strong>Open</strong>, or allow it under <em>System Settings → Privacy &amp; Security → Open Anyway</em>. If it says the app is damaged, remove the quarantine flag:</p>
         <pre><code>xattr -cr /Applications/STARY.app</code></pre>
         <h3>Windows</h3>
-        <p>Run the installer. If Windows SmartScreen appears, choose <strong>More info → Run anyway</strong>. The installer needs the WebView2 runtime, which is already part of Windows 11.</p>
+        <p>Run the installer. If Windows SmartScreen appears, choose <strong>More info → Run anyway</strong>. If Microsoft Defender blocks the file as a virus, it is a false alarm that unsigned new programs often cause: open <em>Windows Security → Virus &amp; threat protection → Protection history</em>, choose the blocked STARY item and <strong>Allow on device</strong>, then download it again. The installer needs the WebView2 runtime, which is already part of Windows 11. To remove STARY, use <em>Settings → Apps → Installed apps</em>. See the <a href="code-signing.html">code signing policy</a>.</p>
       </section>
 
       <section style="padding-top:24px">
@@ -98,6 +98,7 @@ npx tauri build</code></pre>
         <a href="download.html">Download</a>
         <a href="https://stary.readthedocs.io/" rel="noopener">Documentation</a>
         <a href="faq.html">FAQ</a>
+        <a href="code-signing.html">Code signing policy</a>
         <a href="https://github.com/Domiki/STARY/issues" rel="noopener">Report an issue</a>
         <a href="https://github.com/Domiki/STARY" rel="noopener">GitHub</a>
         <a href="https://buymeacoffee.com/domiki" rel="noopener">Buy me a coffee</a>

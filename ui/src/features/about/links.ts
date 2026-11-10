@@ -1,6 +1,5 @@
 export const DEVELOPER = {
-  name: 'Dohyeok Ahn',
-  nickname: 'Domiki',
+  name: 'Domiki',
   email: 'ado505050@gmail.com',
   github: 'https://github.com/Domiki',
 }

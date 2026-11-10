@@ -30,6 +30,12 @@ Pre-release builds are not signed with a paid developer certificate, so your sys
     Run the installer. If Windows SmartScreen appears, choose **More info → Run anyway**. The WebView2 runtime
     is required; it is already part of Windows 11.
 
+    If Microsoft Defender blocks the file as a virus, it is a false alarm that unsigned new programs often
+    cause. Open *Windows Security → Virus & threat protection → Protection history*, choose the blocked STARY
+    item and **Allow on device**, then download the file again.
+
+    To remove STARY, use *Settings → Apps → Installed apps*.
+
 ## Requirements
 
 - **Memory**: 16 GB or more is recommended for 24–26 megapixel RAW files. The *Memory budget* in the

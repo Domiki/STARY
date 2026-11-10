@@ -116,7 +116,7 @@ describe('the About window', () => {
   it('shows the version, the developer and the license', async () => {
     await open()
     expect(screen.getByText('Version 0.1.0 (pre-release)')).toBeTruthy()
-    expect(screen.getByText('Dohyeok Ahn (Domiki)')).toBeTruthy()
+    expect(screen.getByText('Domiki')).toBeTruthy()
     expect(screen.getByText('ado505050@gmail.com')).toBeTruthy()
     expect(screen.getByLabelText('License').textContent).toContain('Permission is hereby granted')
     expect(screen.getByText(/MIT License — Copyright \(c\) 2026 Domiki/)).toBeTruthy()

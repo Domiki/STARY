@@ -64,9 +64,7 @@ export function AboutDialog() {
       <p>{t('about.description')}</p>
 
       <Section title={t('about.developer')}>
-        <p>
-          {DEVELOPER.name} ({DEVELOPER.nickname})
-        </p>
+        <p>{DEVELOPER.name}</p>
         <div className="flex flex-col gap-0.5">
           <Link href={DEVELOPER.github}>{DEVELOPER.github.replace('https://', '')}</Link>
           <Link href={`mailto:${DEVELOPER.email}`}>{DEVELOPER.email}</Link>

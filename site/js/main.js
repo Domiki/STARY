@@ -46,14 +46,17 @@ document.querySelectorAll('pre').forEach((block) => {
 })
 
 // ---------- star-trail hero ----------
-// Stars turn about a pole that sits on the right of the text; every frame fades the picture a
-// little instead of clearing it, so the path of each star stays behind it as a trail.
+// Stars turn about a pole that sits on the right of the text. Every frame the canvas is cleared and each
+// star is drawn with a trail of the path it took in the last few seconds, fading toward its tail, so a
+// trail always disappears after TRAIL_MS.
 const canvas = document.querySelector('.hero canvas')
 if (canvas) {
   const context = canvas.getContext('2d')
   const colors = ['224, 228, 233', '216, 164, 143', '154, 165, 180']
   const STARS = 260
   const SPEED = 0.00012
+  const TRAIL_MS = 5000
+  const PIECES = 14
   let width = 0
   let height = 0
   let pole = { x: 0, y: 0 }
@@ -73,10 +76,7 @@ if (canvas) {
       }
     })
 
-  const place = (star, angle) => ({
-    x: pole.x + Math.cos(angle) * star.radius,
-    y: pole.y + Math.sin(angle) * star.radius,
-  })
+  const turnPerMs = (star) => SPEED * (1 + 140 / (star.radius + 140))
 
   const resize = () => {
     const ratio = Math.min(window.devicePixelRatio || 1, 2)
@@ -85,32 +85,31 @@ if (canvas) {
     canvas.width = width * ratio
     canvas.height = height * ratio
     context.setTransform(ratio, 0, 0, ratio, 0, 0)
-    context.fillStyle = '#0b111b'
-    context.fillRect(0, 0, width, height)
     pole = { x: width * 0.76, y: height * 0.38 }
     stars = makeStars()
-    drawStatic()
+    draw()
   }
 
-  const stroke = (star, from, to) => {
-    const a = place(star, from)
-    const b = place(star, to)
-    context.strokeStyle = `rgba(${star.color}, ${star.alpha})`
-    context.lineWidth = star.size
-    context.beginPath()
-    context.moveTo(a.x, a.y)
-    context.lineTo(b.x, b.y)
-    context.stroke()
-  }
-
-  const drawStatic = () => {
+  const draw = () => {
+    context.fillStyle = '#0b111b'
+    context.fillRect(0, 0, width, height)
+    context.lineCap = 'round'
     for (const star of stars) {
-      const sweep = 0.2 + Math.random() * 0.9
-      context.strokeStyle = `rgba(${star.color}, ${star.alpha * 0.55})`
+      const length = turnPerMs(star) * TRAIL_MS
       context.lineWidth = star.size
-      context.beginPath()
-      context.arc(pole.x, pole.y, star.radius, star.angle, star.angle + sweep)
-      context.stroke()
+      for (let piece = 0; piece < PIECES; piece++) {
+        const fade = (1 - piece / PIECES) ** 2
+        context.strokeStyle = `rgba(${star.color}, ${star.alpha * fade})`
+        context.beginPath()
+        context.arc(
+          pole.x,
+          pole.y,
+          star.radius,
+          star.angle - (length * (piece + 1)) / PIECES,
+          star.angle - (length * piece) / PIECES,
+        )
+        context.stroke()
+      }
     }
   }
 
@@ -118,13 +117,8 @@ if (canvas) {
     if (!running) return
     const elapsed = Math.min(now - last, 48)
     last = now
-    context.fillStyle = 'rgba(11, 17, 27, 0.02)'
-    context.fillRect(0, 0, width, height)
-    for (const star of stars) {
-      const step = elapsed * SPEED * (1 + 140 / (star.radius + 140))
-      stroke(star, star.angle, star.angle + step)
-      star.angle += step
-    }
+    for (const star of stars) star.angle += turnPerMs(star) * elapsed
+    draw()
     requestAnimationFrame(frame)
   }
 

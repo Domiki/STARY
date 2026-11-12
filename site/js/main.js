@@ -55,8 +55,8 @@ if (canvas) {
   const colors = ['224, 228, 233', '216, 164, 143', '154, 165, 180']
   const STARS = 260
   const SPEED = 0.00012
-  const TRAIL_MS = 3000
-  const PIECES = 14
+  const TRAIL_MS = 13500
+  const PIECES = 28
   let width = 0
   let height = 0
   let pole = { x: 0, y: 0 }

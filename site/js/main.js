@@ -55,28 +55,29 @@ if (canvas) {
   const colors = ['224, 228, 233', '216, 164, 143', '154, 165, 180']
   const STARS = 260
   const SPEED = 0.00012
-  const TRAIL_MS = 5000
+  const TRAIL_MS = 3000
   const PIECES = 14
   let width = 0
   let height = 0
   let pole = { x: 0, y: 0 }
-  let stars = []
   let running = false
   let last = 0
 
-  const makeStars = () =>
-    Array.from({ length: STARS }, () => {
-      const reach = Math.hypot(width, height) * 0.9
-      return {
-        radius: 20 + Math.random() ** 1.4 * reach,
-        angle: Math.random() * Math.PI * 2,
-        size: 0.5 + Math.random() * 1.4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: 0.35 + Math.random() * 0.65,
-      }
-    })
+  // A star is made once: its distance from the pole is a share of the size of the canvas, so
+  // resizing the window moves the stars along with it instead of drawing new ones.
+  const stars = Array.from({ length: STARS }, () => ({
+    share: Math.random() ** 1.4,
+    angle: Math.random() * Math.PI * 2,
+    size: 0.5 + Math.random() * 1.4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    alpha: 0.35 + Math.random() * 0.65,
+    radius: 0,
+  }))
 
-  const turnPerMs = (star) => SPEED * (1 + 140 / (star.radius + 140))
+  const layOut = () => {
+    const reach = Math.hypot(width, height) * 0.9
+    for (const star of stars) star.radius = 20 + star.share * reach
+  }
 
   const resize = () => {
     const ratio = Math.min(window.devicePixelRatio || 1, 2)
@@ -86,7 +87,7 @@ if (canvas) {
     canvas.height = height * ratio
     context.setTransform(ratio, 0, 0, ratio, 0, 0)
     pole = { x: width * 0.76, y: height * 0.38 }
-    stars = makeStars()
+    layOut()
     draw()
   }
 
@@ -95,7 +96,7 @@ if (canvas) {
     context.fillRect(0, 0, width, height)
     context.lineCap = 'round'
     for (const star of stars) {
-      const length = turnPerMs(star) * TRAIL_MS
+      const length = SPEED * TRAIL_MS
       context.lineWidth = star.size
       for (let piece = 0; piece < PIECES; piece++) {
         const fade = (1 - piece / PIECES) ** 2
@@ -117,7 +118,7 @@ if (canvas) {
     if (!running) return
     const elapsed = Math.min(now - last, 48)
     last = now
-    for (const star of stars) star.angle += turnPerMs(star) * elapsed
+    for (const star of stars) star.angle += SPEED * elapsed
     draw()
     requestAnimationFrame(frame)
   }

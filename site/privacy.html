@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Code signing policy — STARY</title>
-  <meta name="description" content="How the STARY installers are signed, who signs them and what the program sends over the network." />
+  <title>Privacy — STARY</title>
+  <meta name="description" content="What the STARY program sends over the network, and how to install and remove it." />
   <meta name="theme-color" content="#0b111b" />
-  <meta property="og:title" content="Code signing policy — STARY" />
-  <meta property="og:description" content="How the STARY installers are signed, who signs them and what the program sends over the network." />
+  <meta property="og:title" content="Privacy — STARY" />
+  <meta property="og:description" content="What the STARY program sends over the network, and how to install and remove it." />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="STARY" />
-  <meta property="og:url" content="https://domiki.github.io/STARY/code-signing.html" />
+  <meta property="og:url" content="https://domiki.github.io/STARY/privacy.html" />
   <meta property="og:image" content="https://domiki.github.io/STARY/assets/img/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/png" href="assets/img/icon.png" />
@@ -37,28 +37,17 @@
     <div class="wrap">
       <div class="page-head">
         <span class="eyebrow">Trust</span>
-        <h1>Code signing policy</h1>
-        <p>How the Windows installers of STARY are signed, who is responsible, and what the program sends over the network.</p>
+        <h1>Privacy</h1>
+        <p>What the program sends over the network, and how to install and remove it.</p>
       </div>
 
       <section>
-        <h2>Signing</h2>
-        <p>Free code signing for the Windows installers is provided by <a href="https://signpath.io" rel="noopener">SignPath.io</a>, with a certificate from the <a href="https://signpath.org" rel="noopener">SignPath Foundation</a>. Only installers built from the public source code in <a href="https://github.com/Domiki/STARY" rel="noopener">the repository</a> by its GitHub Actions workflow are signed, and every release is approved by hand before it is signed.</p>
-        <p class="muted">Until the signing is set up, the installers are not signed and Windows may show a warning. See <a href="download.html#first-open">Download</a>.</p>
+        <h2>Unsigned installers</h2>
+        <p>The installers are not signed with a code-signing certificate yet, so Windows SmartScreen or Microsoft Defender may warn you. The files are built from the public source code by <a href="https://github.com/Domiki/STARY/actions" rel="noopener">GitHub Actions</a>, and their SHA-256 checksums are in the notes of each <a href="https://github.com/Domiki/STARY/releases" rel="noopener">release</a>. See <a href="download.html#first-open">Download</a> for how to open them.</p>
       </section>
 
       <section style="padding-top:24px">
-        <h2>Team roles</h2>
-        <table>
-          <tr><th>Authors</th><td><a href="https://github.com/Domiki" rel="noopener">Domiki</a></td></tr>
-          <tr><th>Reviewers</th><td>Domiki</td></tr>
-          <tr><th>Approvers</th><td>Domiki</td></tr>
-        </table>
-        <p class="muted">STARY is developed by one person, who holds all three roles.</p>
-      </section>
-
-      <section style="padding-top:24px">
-        <h2>Privacy</h2>
+        <h2>Network and data</h2>
         <p>STARY works on your own computer. Your photographs are never uploaded, and the program collects no personal data, usage statistics or crash reports.</p>
         <p>The only network request the program makes is a check for a newer version when it starts: it asks the GitHub releases list of this project (<code>api.github.com</code>) and sends only the usual parts of such a request, such as your IP address and the name and version of the program. You can turn it off in <em>Settings</em> by switching off <em>Check for updates</em>. Nothing is downloaded or installed by it; it only tells you that a newer version exists.</p>
       </section>
@@ -79,7 +68,7 @@
         <a href="download.html">Download</a>
         <a href="https://stary.readthedocs.io/" rel="noopener">Documentation</a>
         <a href="faq.html">FAQ</a>
-        <a href="code-signing.html">Code signing policy</a>
+        <a href="privacy.html">Privacy</a>
         <a href="https://github.com/Domiki/STARY/issues" rel="noopener">Report an issue</a>
         <a href="https://github.com/Domiki/STARY" rel="noopener">GitHub</a>
         <a href="https://buymeacoffee.com/domiki" rel="noopener">Buy me a coffee</a>

@@ -50,7 +50,7 @@ Pre-release builds are not signed with a paid developer certificate, so the syst
   If it says the app is damaged, run `xattr -cr /Applications/STARY.app`.
 - **Windows** — in SmartScreen choose **More info → Run anyway**. If Microsoft Defender blocks the file, open
   *Windows Security → Virus & threat protection → Protection history* and choose **Allow on device**.
-  See the [code signing policy](https://domiki.github.io/STARY/code-signing.html).
+  See the [privacy notes](https://domiki.github.io/STARY/privacy.html).
 
 ## Quick start
 
